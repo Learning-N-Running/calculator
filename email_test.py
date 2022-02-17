@@ -1,9 +1,9 @@
 import smtplib
 import re
 from email.mime.text import MIMEText
+import random 
 
 def sendEmail(sendTo):
-    print(str(sendTo))
     if bool(re.match('^[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$', sendTo)):
         print(sendTo)
         sendFrom = "pythonTest0210@gmail.com"
@@ -15,8 +15,9 @@ def sendEmail(sendTo):
         smtp.login(sendFrom, password)
 
         try:
-            msg = MIMEText('test')
-            msg['Subject'] = "test"
+            cert_num = random.randrange(1000,10000)
+            msg = MIMEText('인증 번호는 {}입니다'.format(cert_num))
+            msg['Subject'] = "인증번호 발송"
             msg['To'] = sendTo
             smtp.sendmail(sendFrom, sendTo, msg.as_string())
         except Exception as e:

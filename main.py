@@ -27,6 +27,11 @@ def new_userUpdate():
     sendTo = sendTo_entry.get()
     userUpdate(userId,userName,password,sendTo)
 
+def new_sendEmail():
+    global sendTo
+    sendTo = sendTo_entry.get()
+    et.sendEmail(sendTo)
+
 
 window = tk.Tk()
 window.title("Nado GUI")
@@ -72,7 +77,7 @@ sendTo_entry.grid(row=3, column=1, padx=10, pady=10)
 
 
 
-Button(join_frame, text="인증", command=lambda:[et.sendEmail(sendTo)]).grid(row=3, column=2, padx=10, pady=10)
+Button(join_frame, text="인증", command=lambda:[new_sendEmail()]).grid(row=3, column=2, padx=10, pady=10)
 
 Button(join_frame, text="이전으로", command=lambda:[openFrame(login_frame)]).grid(row=4, column=0, padx=10, pady=10)
 # Button(join_frame, text="complete", command=lambda:[openFrame(room)]).grid(row=4, column=1, padx=10, pady=10)
