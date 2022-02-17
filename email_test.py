@@ -4,7 +4,7 @@ from email.mime.text import MIMEText
 import random 
 
 def sendEmail(sendTo):
-    global correct_email
+    global correct_email,cert_num
     correct_email = True
     if bool(re.match('^[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$', sendTo)):
         print(sendTo)

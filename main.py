@@ -29,7 +29,7 @@ def new_userUpdate():
     userUpdate(userId,userName,password,sendTo)
 
 def new_sendEmail():
-    global sendTo
+    global sendTo,certification_entry
     sendTo = sendTo_entry.get()
     et.sendEmail(sendTo)
 
@@ -47,7 +47,14 @@ def new_sendEmail():
 
 
 def check_certnum():
-    print("인증번호를 확인합니다")
+    global certification_num
+    certification_num = certification_entry.get()
+    if int(certification_num) == int(et.cert_num):
+        Button(join_frame, text="complete", command=lambda:[new_userUpdate()]).grid(row=7, column=1, padx=10, pady=10)
+    else:
+        cannot_certificate_label = Label(join_frame, text="잘못된 인증번호입니다. \n인증번호를 확인한 다음 다시 입력해주세요.")
+        cannot_certificate_label.grid(row=6, column=1, padx=10, pady=10)
+        cannot_certificate_label.after(2000,cannot_certificate_label.destroy)
 
 
 window = tk.Tk()
@@ -93,12 +100,12 @@ sendTo_entry.grid(row=3, column=1, padx=10, pady=10)
 
 Button(join_frame, text="인증번호 받기", command=lambda:[new_sendEmail()]).grid(row=3, column=2, padx=10, pady=10)
 
-Button(join_frame, text="이전으로", command=lambda:[openFrame(login_frame)]).grid(row=6, column=0, padx=10, pady=10)
-# Button(join_frame, text="complete", command=lambda:[openFrame(room)]).grid(row=4, column=1, padx=10, pady=10)
-Button(join_frame, text="complete", command=lambda:[new_userUpdate()]).grid(row=6, column=1, padx=10, pady=10)
+Button(join_frame, text="이전으로", command=lambda:[openFrame(login_frame)]).grid(row=7, column=0, padx=10, pady=10)
+## Button(join_frame, text="complete", command=lambda:[openFrame(room)]).grid(row=4, column=1, padx=10, pady=10)
+# Button(join_frame, text="complete", command=lambda:[new_userUpdate()]).grid(row=6, column=1, padx=10, pady=10)
 
 #출력 버튼은 userId등이 entry에 저장이 되는지 확인하기 위해 임의로 만든 버튼
-Button(join_frame, text="출력", command=lambda:[printall()]).grid(row=6, column=2, padx=10, pady=10)
+Button(join_frame, text="출력", command=lambda:[printall()]).grid(row=7, column=2, padx=10, pady=10)
 
 
 
