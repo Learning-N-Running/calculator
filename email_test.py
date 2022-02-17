@@ -4,6 +4,8 @@ from email.mime.text import MIMEText
 import random 
 
 def sendEmail(sendTo):
+    global correct_email
+    correct_email = True
     if bool(re.match('^[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$', sendTo)):
         print(sendTo)
         sendFrom = "pythonTest0210@gmail.com"
@@ -27,3 +29,4 @@ def sendEmail(sendTo):
                 smtp.quit()
     else:
         print("enter the correct email")
+        correct_email = False
