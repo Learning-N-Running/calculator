@@ -1,6 +1,9 @@
+import email
 import tkinter as tk
 from tkinter import *
+from tokenize import blank_re
 from account import *
+import tkinter.messagebox as msgbox
 
 import email_test as et
 from UserInfoDB import userUpdate
@@ -12,38 +15,58 @@ def btnLogin():
 def openFrame(frame):
     frame.tkraise()
 
-def printall():
+def get_uups():
     global userId,userName,password,sendTo
     userId=userId_entry.get()
     userName = userName_entry.get()
     password = password_entry.get()
     sendTo = sendTo_entry.get()
-    print(userId,userName,password,sendTo)
+
 
 def new_userUpdate():
-    global userId,userName,password,sendTo
-    userId=userId_entry.get()
-    userName = userName_entry.get()
-    password = password_entry.get()
-    sendTo = sendTo_entry.get()
+    get_uups()
     userUpdate(userId,userName,password,sendTo)
 
-def new_sendEmail():
-    global sendTo,certification_entry
-    sendTo = sendTo_entry.get()
-    et.sendEmail(sendTo)
-
-    if et.correct_email==True:
-        Label(join_frame, text="인증번호 입력").grid(row=5, column=0, padx=10, pady=10)
-        certification_entry = Entry(join_frame)
-        certification_entry.grid(row=5, column=1, padx=10, pady=10)
-
-        Button(join_frame, text="확인", command=lambda:[check_certnum()]).grid(row=5, column=2, padx=10, pady=10)
-
+#이메일 확인 전에 모든 정보를 다 입력했나 확인하는 것
+def check_all_info(): 
+    get_uups()
+    global ready_send_certification_num
+    blank_list = [' '*n for n in range(1,11)]
+    blank_list.append('')
+    ready_send_certification_num=False
+    if userName in blank_list:
+        msgbox.showwarning("경고","이름을 입력해주세요.")
     else:
-        not_prop_email_label = Label(join_frame, text="적절한 이메일 형식이 아닙니다.")
-        not_prop_email_label.grid(row=4, column=1, padx=10, pady=10)
-        not_prop_email_label.after(2000,not_prop_email_label.destroy)
+        if userId in blank_list:
+            msgbox.showwarning("경고","ID를 입력해주세요.")
+        else:
+            if password in blank_list:
+                msgbox.showwarning("경고","비밀번호를 입력해주세요.")
+            else:
+                if sendTo in blank_list:
+                    msgbox.showwarning("경고","email을 입력해주세요.")
+                else:
+                    ready_send_certification_num = True
+
+def new_sendEmail():
+    global ready_send_certification_num
+    ready_send_certification_num=False
+    check_all_info()
+    if ready_send_certification_num==True:
+        global certification_entry,sendTo
+        sendTo = sendTo_entry.get()
+        et.sendEmail(sendTo)
+        if et.correct_email==True:
+            Label(join_frame, text="인증번호 입력").grid(row=5, column=0, padx=10, pady=10)
+            certification_entry = Entry(join_frame)
+            certification_entry.grid(row=5, column=1, padx=10, pady=10)
+
+            Button(join_frame, text="확인", command=lambda:[check_certnum()]).grid(row=5, column=2, padx=10, pady=10)
+
+        else:
+            not_prop_email_label = Label(join_frame, text="적절한 이메일 형식이 아닙니다.")
+            not_prop_email_label.grid(row=4, column=1, padx=10, pady=10)
+            not_prop_email_label.after(2000,not_prop_email_label.destroy)
 
 
 def check_certnum():
@@ -56,6 +79,8 @@ def check_certnum():
         cannot_certificate_label.grid(row=6, column=1, padx=10, pady=10)
         cannot_certificate_label.after(2000,cannot_certificate_label.destroy)
 
+
+            
 
 window = tk.Tk()
 window.title("Nado GUI")
@@ -81,15 +106,15 @@ Button(login_frame, text = "Login", command = btnLogin).grid(row = 2, column = 0
 Button(login_frame, text = "join", command = lambda:[openFrame(join_frame)]).grid(row = 2, column = 1, padx = 10, pady = 10)
 
 #join frame
-Label(join_frame, text="name").grid(row=0, column=0, padx=10, pady=10)
+Label(join_frame, text="이름").grid(row=0, column=0, padx=10, pady=10)
 userName_entry = Entry(join_frame)
 userName_entry.grid(row=0, column=1, padx=10, pady=10)
 
-Label(join_frame, text="id").grid(row=1, column=0, padx=10, pady=10)
+Label(join_frame, text="ID").grid(row=1, column=0, padx=10, pady=10)
 userId_entry = Entry(join_frame)
 userId_entry.grid(row=1, column=1, padx=10, pady=10)
 
-Label(join_frame, text="pw").grid(row=2, column=0, padx=10, pady=10)
+Label(join_frame, text="비밀번호").grid(row=2, column=0, padx=10, pady=10)
 password_entry = Entry(join_frame)
 password_entry.grid(row=2, column=1, padx=10, pady=10)
 
@@ -104,8 +129,6 @@ Button(join_frame, text="이전으로", command=lambda:[openFrame(login_frame)])
 ## Button(join_frame, text="complete", command=lambda:[openFrame(room)]).grid(row=4, column=1, padx=10, pady=10)
 # Button(join_frame, text="complete", command=lambda:[new_userUpdate()]).grid(row=6, column=1, padx=10, pady=10)
 
-#출력 버튼은 userId등이 entry에 저장이 되는지 확인하기 위해 임의로 만든 버튼
-Button(join_frame, text="출력", command=lambda:[printall()]).grid(row=7, column=2, padx=10, pady=10)
 
 
 
