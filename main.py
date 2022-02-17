@@ -8,13 +8,19 @@ import tkinter.messagebox as msgbox
 import email_test as et
 from UserInfoDB import userUpdate
 
-
-def btnLogin():
-    print("login")
-
 def openFrame(frame):
     frame.tkraise()
 
+#login frame 함수
+def btnLogin():
+    global real_userId,real_password
+    real_userId = login_userId_entry.get()
+    real_password = login_password_entry.get()
+    print(real_userId,real_password)
+    print("login")
+
+
+#join frame 함수
 def get_uups():
     global userId,userName,password,sendTo
     userId=userId_entry.get()
@@ -22,13 +28,12 @@ def get_uups():
     password = password_entry.get()
     sendTo = sendTo_entry.get()
 
-
 def new_userUpdate():
     get_uups()
     userUpdate(userId,userName,password,sendTo)
+    openFrame(login_frame)
 
-#이메일 확인 전에 모든 정보를 다 입력했나 확인하는 것
-def check_all_info(): 
+def check_all_info(): #이메일 확인 전에 모든 정보를 다 입력했나 확인하는 것
     get_uups()
     global ready_send_certification_num
     blank_list = [' '*n for n in range(1,11)]
@@ -69,7 +74,7 @@ def new_sendEmail():
             not_prop_email_label.after(2000,not_prop_email_label.destroy)
 
 
-def check_certnum():
+def check_certnum(): #인증번호 대조
     global certification_num
     certification_num = certification_entry.get()
     if int(certification_num) == int(et.cert_num):
@@ -96,12 +101,12 @@ login_frame.grid(row=0, column=0, sticky="nsew")
 join_frame.grid(row=0, column=0, sticky="nsew")
 
 #login frame
-user_id, login_password = StringVar(), StringVar()
+login_userId_entry, login_password_entry = StringVar(), StringVar()
 
-Label(login_frame, text = "Username : ").grid(row = 0, column = 0, padx = 10, pady = 10)
+Label(login_frame, text = "User ID : ").grid(row = 0, column = 0, padx = 10, pady = 10)
 Label(login_frame, text = "Password : ").grid(row = 1, column = 0, padx = 10, pady = 10)
-Entry(login_frame, textvariable = user_id).grid(row = 0, column = 1, padx = 10, pady = 10)
-Entry(login_frame, textvariable = login_password, show='*').grid(row = 1, column = 1, padx = 10, pady = 10)
+Entry(login_frame, textvariable = login_userId_entry).grid(row = 0, column = 1, padx = 10, pady = 10)
+Entry(login_frame, textvariable = login_password_entry, show='*').grid(row = 1, column = 1, padx = 10, pady = 10)
 Button(login_frame, text = "Login", command = btnLogin).grid(row = 2, column = 0, padx = 10, pady = 10)
 Button(login_frame, text = "join", command = lambda:[openFrame(join_frame)]).grid(row = 2, column = 1, padx = 10, pady = 10)
 
@@ -126,8 +131,7 @@ sendTo_entry.grid(row=3, column=1, padx=10, pady=10)
 Button(join_frame, text="인증번호 받기", command=lambda:[new_sendEmail()]).grid(row=3, column=2, padx=10, pady=10)
 
 Button(join_frame, text="이전으로", command=lambda:[openFrame(login_frame)]).grid(row=7, column=0, padx=10, pady=10)
-## Button(join_frame, text="complete", command=lambda:[openFrame(room)]).grid(row=4, column=1, padx=10, pady=10)
-# Button(join_frame, text="complete", command=lambda:[new_userUpdate()]).grid(row=6, column=1, padx=10, pady=10)
+
 
 
 
