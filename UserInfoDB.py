@@ -35,13 +35,28 @@ def delete(userId):
                 f.write('%s\n' % line)
     con.close()
 
-if __name__=='__main__':
+def login_check(real_userId): #아이디 비번 대조하는 것
     con = sqlite3.connect("temp.db")
     cur = con.cursor()
-    # cur.execute('CREATE TABLE UserTable(id char(15), UserName char(5), email char(25), password char(15))')
-    cur.execute("SELECT * FROM UserTable")
-    rows = cur.fetchall()
-    for row in rows:
-        print(row)
+    sen = 'Select password From UserTable WHERE id="{}"'.format(real_userId)
+    cur.execute(sen)
+    password = ''.join(cur.fetchone()) #원래는 login_password
     con.close()
+    return password
+
+
+
+# if __name__=='__main__':
+#     con = sqlite3.connect("temp.db")
+#     cur = con.cursor()
+#     # cur.execute('CREATE TABLE UserTable(id char(15), UserName char(5), email char(25), password char(15))')
+#     cur.execute("SELECT * FROM UserTable")
+#     rows = cur.fetchall()
+#     for row in rows:
+#         print(row)
+#     con.close()
+
+print(login_check('tina_id'))
+# delete('tina')
+
 

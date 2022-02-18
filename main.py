@@ -30,7 +30,7 @@ def get_uups():
 
 def new_userUpdate():
     get_uups()
-    userUpdate(userId,userName,password,sendTo)
+    userUpdate(userId,userName,sendTo,password)
     openFrame(login_frame)
 
 def check_all_info(): #이메일 확인 전에 모든 정보를 다 입력했나 확인하는 것
@@ -52,6 +52,7 @@ def check_all_info(): #이메일 확인 전에 모든 정보를 다 입력했나
                     msgbox.showwarning("경고","email을 입력해주세요.")
                 else:
                     ready_send_certification_num = True
+                    # print(userName,userId,sendTo,password)
 
 def new_sendEmail():
     global ready_send_certification_num
