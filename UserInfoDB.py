@@ -39,25 +39,30 @@ def delete(userId):
 def login_check(real_userId): #아이디 비번 대조하는 것
     con = sqlite3.connect("temp.db")
     cur = con.cursor()
-    sen = 'Select password From UserTable WHERE id="{}"'.format(real_userId)
-    cur.execute(sen)
-    password = ''.join(cur.fetchone()) #원래는 login_password
-    con.close()
-    return password
+    try:
+        sen = 'Select password From UserTable WHERE id="{}"'.format(real_userId)
+        cur.execute(sen)
+        password = ''.join(cur.fetchone()) #원래는 login_password
+        print("입력하신 ID가 있군요!") #최종적으로는 지우자.
+        con.close()
+        return password
+    except TypeError:
+        print("입력하신 ID는 없습니다.")
+        con.close()
 
 
 
-if __name__=='__main__':
-    con = sqlite3.connect("temp.db")
-    cur = con.cursor()
-    # cur.execute('CREATE TABLE UserTable(id char(15), UserName char(5), email char(25), password char(15))')
-    cur.execute("SELECT * FROM UserTable")
-    rows = cur.fetchall()
-    for row in rows:
-        print(row)
-    con.close()
+# if __name__=='__main__':
+#     con = sqlite3.connect("temp.db")
+#     cur = con.cursor()
+#     # cur.execute('CREATE TABLE UserTable(id char(15), UserName char(5), email char(25), password char(15))')
+#     cur.execute("SELECT * FROM UserTable")
+#     rows = cur.fetchall()
+#     for row in rows:
+#         print(row)
+#     con.close()
 
-# print(login_check('tina_id'))
+login_check('tina_id')
 # delete('tina')
 
 
