@@ -6,7 +6,7 @@ from account import *
 import tkinter.messagebox as msgbox
 
 import email_test as et
-from UserInfoDB import userUpdate
+from UserInfoDB import userUpdate,login_check
 
 def openFrame(frame):
     frame.tkraise()
@@ -16,9 +16,21 @@ def btnLogin():
     global real_userId,real_password
     real_userId = login_userId_entry.get()
     real_password = login_password_entry.get()
-    print(real_userId,real_password)
-    print("login")
+    login_password,ready_login_check= login_check(real_userId)
+    if ready_login_check==True and login_password==real_password:
+        success_login_label = Label(login_frame, text="로그인 성공")
+        success_login_label.grid(row = 3, column = 1, padx = 10, pady = 10)
+        success_login_label.after(2000,success_login_label.destroy)
 
+    elif ready_login_check==True and login_password!=real_password:
+        fail_login_label = Label(login_frame, text="비밀번호가 정확하지 않습니다.")
+        fail_login_label.grid(row = 4, column = 1, padx = 10, pady = 10)
+        fail_login_label.after(2000,fail_login_label.destroy)    
+            
+    elif ready_login_check==False and login_password ==0:
+        no_id_label = Label(login_frame, text="입력하신 ID는 존재하지 않습니다.")
+        no_id_label.grid(row = 5, column = 1, padx = 10, pady = 10)
+        no_id_label.after(2000,no_id_label.destroy)
 
 #join frame 함수
 def get_uups():

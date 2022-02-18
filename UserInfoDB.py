@@ -37,18 +37,22 @@ def delete(userId):
 
 
 def login_check(real_userId): #아이디 비번 대조하는 것
+    ready_login_check=False
     con = sqlite3.connect("temp.db")
     cur = con.cursor()
     try:
         sen = 'Select password From UserTable WHERE id="{}"'.format(real_userId)
         cur.execute(sen)
-        password = ''.join(cur.fetchone()) #원래는 login_password
-        print("입력하신 ID가 있군요!") #최종적으로는 지우자.
+        login_password = ''.join(cur.fetchone())
+        # print("입력하신 ID가 있군요!") #최종적으로는 지우자.
         con.close()
-        return password
+        ready_login_check=True
+        return login_password,ready_login_check
     except TypeError:
-        print("입력하신 ID는 없습니다.")
+        # print("입력하신 ID는 없습니다.")
         con.close()
+        login_password= 0
+        return login_password ,ready_login_check
 
 
 
