@@ -33,7 +33,6 @@ def btnLogin():
         no_id_label.after(2000,no_id_label.destroy)
 
 
-#변화사항
 def btnJoin():
     login_userId_entry.delete(0,'end')
     login_password_entry.delete(0,'end')
@@ -56,6 +55,10 @@ def new_userUpdate():
     password_entry.delete(0,'end')
     sendTo_entry.delete(0,'end')
     certification_entry.delete(0,'end')
+    input_certnum_label.destroy()
+    certification_entry.destroy()
+    cert_num_ok_button.destroy()
+    check_certnum_complete_button.destroy()
 
     openFrame(login_frame)
 
@@ -81,7 +84,7 @@ def check_all_info(): #이메일 확인 전에 모든 정보를 다 입력했나
                     # print(userName,userId,sendTo,password)
 
 def new_sendEmail():
-    global ready_send_certification_num
+    global ready_send_certification_num,input_certnum_label,certification_entry,cert_num_ok_button
     ready_send_certification_num=False
     check_all_info()
     if ready_send_certification_num==True:
@@ -89,11 +92,12 @@ def new_sendEmail():
         sendTo = sendTo_entry.get()
         et.sendEmail(sendTo)
         if et.correct_email==True:
-            Label(join_frame, text="인증번호 입력").grid(row=5, column=0, padx=10, pady=10)
+            input_certnum_label = Label(join_frame, text="인증번호 입력")
+            input_certnum_label.grid(row=5, column=0, padx=10, pady=10)
             certification_entry = Entry(join_frame)
             certification_entry.grid(row=5, column=1, padx=10, pady=10)
-
-            Button(join_frame, text="확인", command=lambda:[check_certnum()]).grid(row=5, column=2, padx=10, pady=10)
+            cert_num_ok_button = Button(join_frame, text="확인", command=lambda:[check_certnum()])
+            cert_num_ok_button.grid(row=5, column=2, padx=10, pady=10)
 
         else:
             not_prop_email_label = Label(join_frame, text="적절한 이메일 형식이 아닙니다.")
@@ -102,10 +106,11 @@ def new_sendEmail():
 
 
 def check_certnum(): #인증번호 대조
-    global certification_num
+    global certification_num,check_certnum_complete_button
     certification_num = certification_entry.get()
     if int(certification_num) == int(et.cert_num):
-        Button(join_frame, text="complete", command=lambda:[new_userUpdate()]).grid(row=7, column=1, padx=10, pady=10)
+        check_certnum_complete_button=Button(join_frame, text="complete", command=lambda:[new_userUpdate()])
+        check_certnum_complete_button.grid(row=7, column=1, padx=10, pady=10)
     else:
         cannot_certificate_label = Label(join_frame, text="잘못된 인증번호입니다. \n인증번호를 확인한 다음 다시 입력해주세요.")
         cannot_certificate_label.grid(row=6, column=1, padx=10, pady=10)
