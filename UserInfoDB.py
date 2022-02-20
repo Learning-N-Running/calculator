@@ -1,4 +1,26 @@
 import sqlite3
+import os
+
+
+def init_db_when_start():
+    if os.path.isfile("temp.db"):
+        os.remove("temp.db")
+    con = sqlite3.connect("temp.db")
+    cur = con.cursor()
+    f = open('dump_script.sql','r')
+    datas = f.readlines()
+    for data in datas:
+        if data.startswith('INSERT INTO'):
+            cur.execute(data)
+        elif data.startswith('CREATE TABLE'):
+            cur.execute(data)
+    con.commit()
+    with con:
+        with open("dump_script.sql", 'w',encoding='utf-8') as f:
+            for line in con.iterdump():
+                f.write('%s\n' % line)
+    con.close()
+
 
 #지우면 안됨.
 # cur.execute('CREATE TABLE UserTable(id char(15), UserName char(5), email char(25), password char(15))')
@@ -56,17 +78,19 @@ def login_check(real_userId): #아이디 비번 대조하는 것
 
 
 
-# if __name__=='__main__':
-#     con = sqlite3.connect("temp.db")
-#     cur = con.cursor()
-#     # cur.execute('CREATE TABLE UserTable(id char(15), UserName char(5), email char(25), password char(15))')
-#     cur.execute("SELECT * FROM UserTable")
-#     rows = cur.fetchall()
-#     for row in rows:
-#         print(row)
-#     con.close()
+if __name__=='__main__':
+    con = sqlite3.connect("temp.db")
+    cur = con.cursor()
+    # cur.execute('CREATE TABLE UserTable(id char(15), UserName char(5), email char(25), password char(15))')
 
-login_check('tina_id')
-# delete('tina')
+    cur.execute("SELECT * FROM UserTable")
+    rows = cur.fetchall()
+    
+    for row in rows:
+        print(row)
+    con.close()
+
+# login_check('tina_id')
+# delete('gina_id')
 
 
