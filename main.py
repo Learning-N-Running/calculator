@@ -32,6 +32,13 @@ def btnLogin():
         no_id_label.grid(row = 5, column = 1, padx = 10, pady = 10)
         no_id_label.after(2000,no_id_label.destroy)
 
+
+#변화사항
+def btnJoin():
+    login_userId_entry.delete(0,'end')
+    login_password_entry.delete(0,'end')
+    openFrame(join_frame)
+
 #join frame 함수
 def get_uups():
     global userId,userName,password,sendTo
@@ -43,6 +50,13 @@ def get_uups():
 def new_userUpdate():
     get_uups()
     userUpdate(userId,userName,sendTo,password)
+
+    userName_entry.delete(0,'end')
+    userId_entry.delete(0,'end')
+    password_entry.delete(0,'end')
+    sendTo_entry.delete(0,'end')
+    certification_entry.delete(0,'end')
+
     openFrame(login_frame)
 
 def check_all_info(): #이메일 확인 전에 모든 정보를 다 입력했나 확인하는 것
@@ -116,14 +130,21 @@ login_frame.grid(row=0, column=0, sticky="nsew")
 join_frame.grid(row=0, column=0, sticky="nsew")
 
 #login frame
-login_userId_entry, login_password_entry = StringVar(), StringVar()
+# login_userId_entry, login_password_entry = StringVar(), StringVar()
 
 Label(login_frame, text = "User ID : ").grid(row = 0, column = 0, padx = 10, pady = 10)
 Label(login_frame, text = "Password : ").grid(row = 1, column = 0, padx = 10, pady = 10)
-Entry(login_frame, textvariable = login_userId_entry).grid(row = 0, column = 1, padx = 10, pady = 10)
-Entry(login_frame, textvariable = login_password_entry, show='*').grid(row = 1, column = 1, padx = 10, pady = 10)
+# Entry(login_frame, textvariable = login_userId_entry).grid(row = 0, column = 1, padx = 10, pady = 10)
+# Entry(login_frame, textvariable = login_password_entry, show='*').grid(row = 1, column = 1, padx = 10, pady = 10)
+
+login_userId_entry =Entry(login_frame)
+login_userId_entry.grid(row = 0, column = 1, padx = 10, pady = 10)
+
+login_password_entry = Entry(login_frame, show='*')
+login_password_entry.grid(row = 1, column = 1, padx = 10, pady = 10)
+
 Button(login_frame, text = "Login", command = btnLogin).grid(row = 2, column = 0, padx = 10, pady = 10)
-Button(login_frame, text = "join", command = lambda:[openFrame(join_frame)]).grid(row = 2, column = 1, padx = 10, pady = 10)
+Button(login_frame, text = "join", command = btnJoin).grid(row = 2, column = 1, padx = 10, pady = 10)
 
 #join frame
 Label(join_frame, text="이름").grid(row=0, column=0, padx=10, pady=10)

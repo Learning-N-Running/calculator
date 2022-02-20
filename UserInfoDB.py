@@ -91,6 +91,6 @@ if __name__=='__main__':
     con.close()
 
 # login_check('tina_id')
-# delete('gina_id')
+# delete('poo_id')
 
 
