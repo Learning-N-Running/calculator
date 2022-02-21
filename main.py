@@ -120,6 +120,13 @@ def check_certnum(): #인증번호 대조
         cannot_certificate_label.grid(row=6, column=1, padx=10, pady=10)
         cannot_certificate_label.after(2000,cannot_certificate_label.destroy)
 
+def go_back():
+    userName_entry.delete(0,'end')
+    userId_entry.delete(0,'end')
+    password_entry.delete(0,'end')
+    sendTo_entry.delete(0,'end')
+    openFrame(login_frame)
+
 
             
 
@@ -175,7 +182,7 @@ sendTo_entry.grid(row=3, column=1, padx=10, pady=10)
 
 Button(join_frame, text="인증번호 받기", command=lambda:[new_sendEmail()]).grid(row=3, column=2, padx=10, pady=10)
 
-Button(join_frame, text="이전으로", command=lambda:[openFrame(login_frame)]).grid(row=7, column=0, padx=10, pady=10)
+Button(join_frame, text="이전으로", command=go_back).grid(row=7, column=0, padx=10, pady=10)
 
 
 
