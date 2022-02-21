@@ -2,6 +2,9 @@ from tkinter import *
 import tkinter.messagebox as msgbox
 from tkinter.ttk import Labelframe
 
+from UserInfoDB import getGroupInfo, insertData
+
+
 window = Tk()
 window.title("계산기")
 window.geometry("640x480")
@@ -17,8 +20,60 @@ def ChangePW():
     if response==1: #확인
         print("비밀번호를 변경합니다.")
 
-def AddGroup():
-    print("그룹을 추가합니다.")
+def callback(*args):
+    a = pw_var.get()
+    b = pw_check_var.get()
+
+    if a==b:
+        lb_var.set("success")
+        return
+
+def addGroup():
+    global add_menu
+    add_menu = Toplevel(window)
+    add_menu.geometry("400x400")
+    add_menu.title("모임을 추가합니다.")
+    
+    Label(add_menu, padx=40, pady=20, text="모임 이름").grid()
+    groupName = Entry(add_menu)
+    groupName.grid(row=0, column=1)
+
+    Label(add_menu, padx=40, pady=20, text="지역").grid()
+    groupSite = Entry(add_menu)
+    groupSite.grid(row=1, column=1)
+
+    global pw_var
+    pw_var = StringVar()
+    global pw_check_var
+    pw_check_var = StringVar()
+    global lb_var
+    lb_var = StringVar()
+
+    Label(add_menu, padx=40, pady=20, text="비밀번호").grid()
+    global groupPw
+    groupPw = Entry(add_menu, textvariable=pw_var)
+    groupPw.grid(row=2, column=1)
+
+    Label(add_menu, padx=40, pady=20, text="비밀번호 확인").grid()
+    global groupPw_check
+    groupPw_check = Entry(add_menu, textvariable=pw_check_var)
+    groupPw_check.grid(row=3, column=1)
+
+    pw_check_var.trace('w', callback)
+
+    check_label = Label(add_menu, textvariable=lb_var, background="ivory")
+    check_label.grid()
+
+    Button(add_menu, padx=30, pady=5, text="확인", command=lambda:[insertData(groupName.get(), groupSite.get(), groupPw.get())]).grid(row=5, column=0)
+    Button(add_menu, padx=30, pady=5, text="취소").grid(row=5, column=1)
+
+    # add_menu.bind("<Keys>", checkPassword)
+
+def addList(frame):
+    group_list = getGroupInfo()
+    for i in range(len(group_list)):
+        Label(frame, text=group_list[i], width=50, padx=10, pady=10, background="ivory").pack(expand=True, side="top")
+        Button(frame, text="입장", width=50, padx=10, pady=10).pack(expand=True)
 
 def SearchGroup():
     print("그룹을 찾습니다")

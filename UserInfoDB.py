@@ -76,7 +76,22 @@ def login_check(real_userId): #아이디 비번 대조하는 것
         login_password= 0
         return login_password ,ready_login_check
 
+def insertData(groupName, groupSite, groupPw):
+    con = sqlite3.connect("temp.db")
+    cur = con.cursor()
+    cur.execute("select count(*) from UserGroup")
+    groupId = cur.fetchone()[0] + 1
 
+    cur.execute("insert into UserGroup VALUES(?, ?, ?, ?)", (groupId, groupName, groupSite, groupPw))
+    con.commit()
+    con.close()
+
+def getGroupInfo():
+    con = sqlite3.connect("temp.db")
+    cur = con.cursor()
+    cur.execute("select groupName from UserGroup")
+    gName = cur.fetchall()
+    return gName
 
 if __name__=='__main__':
     con = sqlite3.connect("temp.db")
