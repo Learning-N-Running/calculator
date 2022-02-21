@@ -88,7 +88,7 @@ menu.add_cascade(label="내정보",menu=menu_info)
 frame_addsearch_group = Frame(window)
 frame_addsearch_group.pack(fill="x",padx = 5,pady=10)
 
-btn_add_group=Button(frame_addsearch_group,padx=5,pady=5,width=12,text="그룹 추가",command=AddGroup)
+btn_add_group=Button(frame_addsearch_group,padx=5,pady=5,width=12,text="그룹 추가",command=addGroup)
 btn_add_group.pack(side="left")
 
 btn_search_group=Button(frame_addsearch_group,padx=5,pady=5,width=12,text="그룹 찾기",command=SearchGroup)
