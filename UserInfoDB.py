@@ -84,6 +84,11 @@ def insertData(groupName, groupSite, groupPw):
 
     cur.execute("insert into UserGroup VALUES(?, ?, ?, ?)", (groupId, groupName, groupSite, groupPw))
     con.commit()
+    with con:
+        with open("dump_script.sql", 'w',encoding='utf-8') as f:
+            for line in con.iterdump():
+                f.write('%s\n' % line)
+
     con.close()
 
 def getGroupInfo():
@@ -91,6 +96,7 @@ def getGroupInfo():
     cur = con.cursor()
     cur.execute("select groupName from UserGroup")
     gName = cur.fetchall()
+    
     return gName
 
 if __name__=='__main__':
