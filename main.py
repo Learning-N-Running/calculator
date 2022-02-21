@@ -180,3 +180,5 @@ Button(join_frame, text="이전으로", command=lambda:[openFrame(login_frame)])
 openFrame(login_frame)
 
 window.mainloop()
+
+#####안녕하세요.
