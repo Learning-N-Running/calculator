@@ -182,4 +182,8 @@ openFrame(login_frame)
 window.mainloop()
 
 #####안녕하세요.
+<<<<<<< HEAD
+##봉쥬르
+=======
 #####hihihi
+>>>>>>> e5a454dffebb5d7837050599fd47fa234b1ea358
