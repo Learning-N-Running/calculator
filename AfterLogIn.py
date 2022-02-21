@@ -26,7 +26,9 @@ def callback(*args):
 
     if a==b:
         lb_var.set("success")
-        return
+    else:
+        lb_var.set("다시 입력하세요.")
+    
 
 def addGroup():
     global add_menu
