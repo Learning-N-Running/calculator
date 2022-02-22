@@ -23,14 +23,13 @@ def openFrame(frame):
 
 def CheckMyInfo():
     print("내 정보를 확인합니다.")
-    wmi = watchmyinfo()
-    wmi.second()
-    wmi.window.mainloop()
-
+    win_cmi = Toplevel(window)
+    cmi = watchmyinfo(win_cmi)
+    cmi.second()
 
 def ChangePW():
-    win = Toplevel(window)
-    cpw = changepw(win)
+    win_cpw = Toplevel(window)
+    cpw = changepw(win_cpw)
 
 
 def callback(*args):

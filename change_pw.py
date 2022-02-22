@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter.font import *
 
+#문제사항 해결하려면 AfterLogin-내정보-비밀번호변경 들어가기
 
 def openFrame(frame):
     frame.tkraise()

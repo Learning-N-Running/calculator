@@ -27,7 +27,7 @@ def btnLogin():
             import AfterLogIn
 
     elif ready_login_check==True and login_password!=real_password:
-        fail_login_label = Label(login_frame, text="비밀번호가 정확하지 않습니다.")
+        fail_login_label = Label(login_frame, text="비밀번호를 잘못 입력하셨습니다.")
         fail_login_label.grid(row = 4, column = 1, padx = 10, pady = 10)
         fail_login_label.after(2000,fail_login_label.destroy)    
             
