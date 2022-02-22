@@ -125,6 +125,14 @@ def go_back():
     userId_entry.delete(0,'end')
     password_entry.delete(0,'end')
     sendTo_entry.delete(0,'end')
+    try:
+        certification_entry.delete(0,'end')
+        input_certnum_label.destroy()
+        certification_entry.destroy()
+        cert_num_ok_button.destroy()
+        check_certnum_complete_button.destroy()
+    except:
+        pass
     openFrame(login_frame)
 
 
