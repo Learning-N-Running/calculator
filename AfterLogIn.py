@@ -1,3 +1,4 @@
+from tabnanny import check
 from tkinter import *
 import tkinter.messagebox as msgbox
 from tkinter.ttk import Labelframe
@@ -10,6 +11,7 @@ window.title("계산기")
 window.geometry("640x480")
 
 menu = Menu(window)
+checkmyinfo_switch=0
 
 #함수 정리
 def CheckMyInfo():

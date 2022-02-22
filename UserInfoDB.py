@@ -3,6 +3,8 @@ import os
 
 
 def init_db_when_start():
+    if os.path.isfile('login_info.txt'):
+        os.remove('login_info.txt')
     if os.path.isfile("temp.db"):
         os.remove("temp.db")
     con = sqlite3.connect("temp.db")
@@ -98,6 +100,20 @@ def getGroupInfo():
     gName = cur.fetchall()
     
     return gName
+
+#변경사항
+def find_username_email(login_id):
+    con = sqlite3.connect("temp.db")
+    cur = con.cursor()
+    sen = 'Select UserName From UserTable WHERE id="{}"'.format(login_id)
+    cur.execute(sen)
+    username_for_watchmyinfo = ''.join(cur.fetchone())
+    sen = 'Select email From UserTable WHERE id="{}"'.format(login_id)
+    cur.execute(sen)
+    email_for_watchmyinfo = ''.join(cur.fetchone())
+    return username_for_watchmyinfo,email_for_watchmyinfo
+
+
 
 if __name__=='__main__':
     con = sqlite3.connect("temp.db")
