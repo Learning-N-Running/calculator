@@ -52,7 +52,7 @@ def userUpdate(userId, userName, sendTo, password):
 
     con.close()
 
-#변경사항
+
 def confirm_id_dup(userId):
     con = sqlite3.connect("temp.db")
     cur = con.cursor()

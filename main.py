@@ -51,30 +51,36 @@ def get_uups():
     sendTo = sendTo_entry.get()
 
 def new_userUpdate():
-    get_uups()
-
+    check_all_info()
     global id_dup_switch
-    response = confirm_id_dup(userId)
-    if response == False:
-        msgbox.showinfo("아이디 중복","동일한 ID가 이미 존재합니다.\n \n다른 ID로 회원가입해주세요.")
-        id_dup_switch = 'dup'
-    elif response==userId:
-        id_dup_switch = 'usable'
+    if ready_send_certification_num==True:
+        response = confirm_id_dup(userId)
+        if response == False:
+            msgbox.showinfo("아이디 중복","동일한 ID가 이미 존재합니다.\n \n다른 ID로 회원가입해주세요.")
+            id_dup_switch = 'dup'
+        elif response==userId:
+            id_dup_switch = 'usable'
 
-    if id_dup_switch=='usable':
-        userUpdate(userId,userName,sendTo,password)
+        if id_dup_switch=='usable':
+            userUpdate(userId,userName,sendTo,password)
 
-        userName_entry.delete(0,'end')
-        userId_entry.delete(0,'end')
-        password_entry.delete(0,'end')
-        sendTo_entry.delete(0,'end')
-        certification_entry.delete(0,'end')
-        input_certnum_label.destroy()
-        certification_entry.destroy()
-        cert_num_ok_button.destroy()
-        check_certnum_complete_button.destroy()
+            userName_entry.delete(0,'end')
+            userId_entry.delete(0,'end')
+            password_entry.delete(0,'end')
+            sendTo_entry.delete(0,'end')
+            certification_entry.delete(0,'end')
+            input_certnum_label.destroy()
+            certification_entry.destroy()
+            cert_num_ok_button.destroy()
+            check_certnum_complete_button.destroy()
 
-        openFrame(login_frame)
+            openFrame(login_frame)
+        else:
+            certification_entry.delete(0,'end')
+            input_certnum_label.destroy()
+            certification_entry.destroy()
+            cert_num_ok_button.destroy()
+            check_certnum_complete_button.destroy()
     else:
         certification_entry.delete(0,'end')
         input_certnum_label.destroy()
