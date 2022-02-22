@@ -7,6 +7,7 @@ from tkinter.font import *
 from UserInfoDB import getGroupInfo, insertData
 from UserInfoDB import find_username_email
 from watch_my_info import *
+from change_pw import *
 
 
 window = Tk()
@@ -14,7 +15,7 @@ window.title("계산기")
 window.geometry("640x480")
 
 menu = Menu(window)
-checkmyinfo_switch=0
+
 
 #함수 정리
 def openFrame(frame):
@@ -28,18 +29,22 @@ def CheckMyInfo():
 
 
 def ChangePW():
-    response = msgbox.askokcancel("비밀번호 변경 확인","비밀번호를 변경하시겠습니까?")
-    if response==1: #확인
-        print("비밀번호를 변경합니다.")
+    win = Toplevel(window)
+    cpw = changepw(win)
+
 
 def callback(*args):
     a = pw_var.get()
     b = pw_check_var.get()
-
-    if a==b:
-        lb_var.set("success")
-    else:
+    blank_list = [' '*n for n in range(1,11)]
+    blank_list.append('')
+    if a in blank_list or b in blank_list:
         lb_var.set("다시 입력하세요.")
+    else:
+        if a==b:
+            lb_var.set("success")
+        else:
+            lb_var.set("다시 입력하세요.")
     
 
 def addGroup():
@@ -74,6 +79,7 @@ def addGroup():
     groupPw_check.grid(row=3, column=1)
 
     pw_check_var.trace('w', callback)
+    pw_var.trace('w', callback)
 
     check_label = Label(add_menu, textvariable=lb_var, background="ivory")
     check_label.grid()
