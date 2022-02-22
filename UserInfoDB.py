@@ -1,7 +1,13 @@
+from ast import expr_context
 import sqlite3
 import os
 
+#지우면 안됨.
+# cur.execute('CREATE TABLE UserTable(id char(15), UserName char(5), email char(25), password char(15))')
+# CREATE TABLE UserGroup(groupId INTEGER PRIMARY KEY, groupName TEXT, groupSite CHAR(25), groupPw VARCHAR(15));
 
+
+#db 초기화
 def init_db_when_start():
     if os.path.isfile('login_info.txt'):
         os.remove('login_info.txt')
@@ -24,8 +30,7 @@ def init_db_when_start():
     con.close()
 
 
-#지우면 안됨.
-# cur.execute('CREATE TABLE UserTable(id char(15), UserName char(5), email char(25), password char(15))')
+
 def userUpdate(userId, userName, sendTo, password):
     con = sqlite3.connect("temp.db")
     cur = con.cursor()
@@ -46,6 +51,24 @@ def userUpdate(userId, userName, sendTo, password):
                 f.write('%s\n' % line)
 
     con.close()
+
+#변경사항
+def confirm_id_dup(userId):
+    con = sqlite3.connect("temp.db")
+    cur = con.cursor()
+
+    sen = 'Select userName From UserTable WHERE id="{}"'.format(userId)
+    cur.execute(sen)
+    id_dup_switch = cur.fetchone()
+    if id_dup_switch == None:
+        print('중복이 아닙니다.')
+        con.close()
+        return userId
+    else:
+        print('중복입니다')
+        con.close()
+        return False
+    
 
 def delete(userId):
     con = sqlite3.connect("temp.db")
@@ -129,8 +152,6 @@ def change_pw(present_pw,new_pw):
 # if __name__=='__main__':
 #     con = sqlite3.connect("temp.db")
 #     cur = con.cursor()
-#     # cur.execute('CREATE TABLE UserTable(id char(15), UserName char(5), email char(25), password char(15))')
-
 #     cur.execute("SELECT * FROM UserTable")
 #     rows = cur.fetchall()
     
@@ -140,5 +161,5 @@ def change_pw(present_pw,new_pw):
 
 # login_check('tina_id')
 # delete('poo_id')
-
+confirm_id_dup('jk_id')
 

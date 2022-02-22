@@ -4,7 +4,7 @@ from account import *
 import tkinter.messagebox as msgbox
 
 import email_test as et
-from UserInfoDB import userUpdate,login_check,init_db_when_start
+from UserInfoDB import confirm_id_dup, userUpdate,login_check,init_db_when_start
 
 def openFrame(frame):
     frame.tkraise()
@@ -52,19 +52,35 @@ def get_uups():
 
 def new_userUpdate():
     get_uups()
-    userUpdate(userId,userName,sendTo,password)
 
-    userName_entry.delete(0,'end')
-    userId_entry.delete(0,'end')
-    password_entry.delete(0,'end')
-    sendTo_entry.delete(0,'end')
-    certification_entry.delete(0,'end')
-    input_certnum_label.destroy()
-    certification_entry.destroy()
-    cert_num_ok_button.destroy()
-    check_certnum_complete_button.destroy()
+    global id_dup_switch
+    response = confirm_id_dup(userId)
+    if response == False:
+        msgbox.showinfo("아이디 중복","동일한 ID가 이미 존재합니다.\n \n다른 ID로 회원가입해주세요.")
+        id_dup_switch = 'dup'
+    elif response==userId:
+        id_dup_switch = 'usable'
 
-    openFrame(login_frame)
+    if id_dup_switch=='usable':
+        userUpdate(userId,userName,sendTo,password)
+
+        userName_entry.delete(0,'end')
+        userId_entry.delete(0,'end')
+        password_entry.delete(0,'end')
+        sendTo_entry.delete(0,'end')
+        certification_entry.delete(0,'end')
+        input_certnum_label.destroy()
+        certification_entry.destroy()
+        cert_num_ok_button.destroy()
+        check_certnum_complete_button.destroy()
+
+        openFrame(login_frame)
+    else:
+        certification_entry.delete(0,'end')
+        input_certnum_label.destroy()
+        certification_entry.destroy()
+        cert_num_ok_button.destroy()
+        check_certnum_complete_button.destroy()
 
 def check_all_info(): #이메일 확인 전에 모든 정보를 다 입력했나 확인하는 것
     get_uups()
@@ -135,6 +151,17 @@ def go_back():
         pass
     openFrame(login_frame)
 
+def new_confirm_id_dup():
+    global userId,id_dup_switch
+    userId=userId_entry.get()
+    response = confirm_id_dup(userId)
+    if response == False:
+        msgbox.showinfo("아이디 중복","동일한 ID가 이미 존재합니다.\n \n다른 ID로 회원가입해주세요.")
+        id_dup_switch = 'dup'
+    elif response==userId:
+        msgbox.showinfo("아이디 사용 가능","사용 가능한 ID입니다.")
+        id_dup_switch = 'usable'
+
 
             
 
@@ -183,6 +210,7 @@ Label(join_frame, text="email").grid(row=3, column=0, padx=10, pady=10)
 sendTo_entry = Entry(join_frame, width = 30)
 sendTo_entry.grid(row=3, column=1, padx=10, pady=10)
 
+Button(join_frame, text="ID 중복 확인", command=new_confirm_id_dup).grid(row=1, column=2, padx=10, pady=10)
 
 Button(join_frame, text="인증번호 받기", command=lambda:[new_sendEmail()]).grid(row=3, column=2, padx=10, pady=10)
 
