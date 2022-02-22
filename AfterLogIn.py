@@ -2,8 +2,11 @@ from tabnanny import check
 from tkinter import *
 import tkinter.messagebox as msgbox
 from tkinter.ttk import Labelframe
+from tkinter.font import *
 
 from UserInfoDB import getGroupInfo, insertData
+from UserInfoDB import find_username_email
+from watch_my_info import *
 
 
 window = Tk()
@@ -14,8 +17,15 @@ menu = Menu(window)
 checkmyinfo_switch=0
 
 #함수 정리
+def openFrame(frame):
+    frame.tkraise()
+
 def CheckMyInfo():
     print("내 정보를 확인합니다.")
+    wmi = watchmyinfo()
+    wmi.second()
+    wmi.window.mainloop()
+
 
 def ChangePW():
     response = msgbox.askokcancel("비밀번호 변경 확인","비밀번호를 변경하시겠습니까?")
@@ -81,6 +91,7 @@ def addList(frame):
 
 def SearchGroup():
     print("그룹을 찾습니다")
+
 
 #메뉴 
 menu_info = Menu(menu,tearoff=0)
