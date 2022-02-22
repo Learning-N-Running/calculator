@@ -1,5 +1,8 @@
+from http.client import ResponseNotReady
 from tkinter import *
 from tkinter.font import *
+import tkinter.messagebox as msgbox
+from UserInfoDB import change_pw
 
 #문제사항 해결하려면 AfterLogin-내정보-비밀번호변경 들어가기
 
@@ -79,10 +82,22 @@ class changepw:
             pass
         else:
             if a==b:
-                self.change_pw_button = Button(self.newin, padx=30, pady=5, text="변경")
+                self.change_pw_button = Button(self.newin, padx=30, pady=5, text="변경",command=self.new_change_pw)
                 self.change_pw_button.grid(row=4, column=2)
             else:
                 try:
                     self.change_pw_button.destroy()
                 except:
                     pass
+                
+    def new_change_pw(self):
+        response = msgbox.askokcancel("비밀번호 변경 확인","정말 비밀번호를 변경하시겠습니까?")
+        if response==True:
+            change_pw(self.recent_pw_var.get(),self.new_pw_var.get())
+            with open('login_info.txt','w') as f:
+                id_line = 'id: '+ str(self.login_id) + ' \n'
+                pw_line = 'pw: '+ str(self.new_pw_var.get()) +' \n'
+                f.write(id_line)
+                f.write(pw_line)
+            msgbox.showinfo("알림","비밀번호가 정상적으로 변경되었습니다.")
+            self.newin.destroy()

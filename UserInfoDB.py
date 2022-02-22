@@ -101,7 +101,6 @@ def getGroupInfo():
     
     return gName
 
-#변경사항
 def find_username_email(login_id):
     con = sqlite3.connect("temp.db")
     cur = con.cursor()
@@ -113,19 +112,31 @@ def find_username_email(login_id):
     email_for_watchmyinfo = ''.join(cur.fetchone())
     return username_for_watchmyinfo,email_for_watchmyinfo
 
-
-
-if __name__=='__main__':
+def change_pw(present_pw,new_pw):
     con = sqlite3.connect("temp.db")
     cur = con.cursor()
-    # cur.execute('CREATE TABLE UserTable(id char(15), UserName char(5), email char(25), password char(15))')
-
-    cur.execute("SELECT * FROM UserTable")
-    rows = cur.fetchall()
-    
-    for row in rows:
-        print(row)
+    sen = 'Update UserTable SET password="{}" WHERE password="{}"'.format(new_pw,present_pw)
+    cur.execute(sen)
+    con.commit()
+    with con:
+        with open("dump_script.sql", 'w',encoding='utf-8') as f:
+            for line in con.iterdump():
+                f.write('%s\n' % line)
     con.close()
+
+
+
+# if __name__=='__main__':
+#     con = sqlite3.connect("temp.db")
+#     cur = con.cursor()
+#     # cur.execute('CREATE TABLE UserTable(id char(15), UserName char(5), email char(25), password char(15))')
+
+#     cur.execute("SELECT * FROM UserTable")
+#     rows = cur.fetchall()
+    
+#     for row in rows:
+#         print(row)
+#     con.close()
 
 # login_check('tina_id')
 # delete('poo_id')
