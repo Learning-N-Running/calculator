@@ -154,12 +154,8 @@ login_frame.grid(row=0, column=0, sticky="nsew")
 join_frame.grid(row=0, column=0, sticky="nsew")
 
 #login frame
-# login_userId_entry, login_password_entry = StringVar(), StringVar()
-
 Label(login_frame, text = "User ID : ").grid(row = 0, column = 0, padx = 10, pady = 10)
 Label(login_frame, text = "Password : ").grid(row = 1, column = 0, padx = 10, pady = 10)
-# Entry(login_frame, textvariable = login_userId_entry).grid(row = 0, column = 1, padx = 10, pady = 10)
-# Entry(login_frame, textvariable = login_password_entry, show='*').grid(row = 1, column = 1, padx = 10, pady = 10)
 
 login_userId_entry =Entry(login_frame)
 login_userId_entry.grid(row = 0, column = 1, padx = 10, pady = 10)
