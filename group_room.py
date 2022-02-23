@@ -1,10 +1,9 @@
 #방 만들고 들어갔을 때 
-from cProfile import label
-from cgitb import text
-from textwrap import fill
 from tkinter import *
 from tkinter.font import *
 import tkinter.messagebox as msgbox
+from tkinter import ttk
+from turtle import bgcolor, width
 
 def openFrame(frame):
     frame.tkraise()
@@ -19,10 +18,6 @@ class grouproom:
 
         self.font1=Font(family="맑은 고딕", size=30)
         self.font2=Font(family="맑은 고딕", size=15)
-
-        # self.top_space_label = Label(self.window,text="",padx=320)
-        # self.top_space_label.pack()
-        # self.top_space_label.configure(bg = 'blue')
 
         self.group_name_label = Label(self.window, text=self.group_name, font=self.font1)
         self.group_name_label.pack(pady=20)
@@ -65,9 +60,33 @@ class grouproom:
         self.add_event_button = Button(self.add_event_frame, text='이벤트 추가',font=self.font2)
         self.add_event_button.pack(side='left',ipadx=5)
 
-        #이벤트 프레임
-        self.event_frame = Frame(self.window,bd=1,relief='solid')
-        self.event_frame.pack(side='top',ipadx=280,ipady=120,pady=5)  
+        #추가
+        self.container = Frame(self.window,bd=1,relief='solid')
+        self.container.pack(side='left',fill='both',expand=True,pady=5)
 
+        self.canvas = Canvas(self.container) 
+        self.canvas.pack(side='left',fill='both',expand=True)
+
+
+        self.scrollbar = ttk.Scrollbar(self.container,orient="vertical",command=self.canvas.yview)
+        self.scrollbar.pack(side='right',fill='y')
+
+        self.scrollable_frame = Frame(self.canvas)
+
+        self.scrollable_frame.bind(
+            "<Configure>",
+            lambda e: self.canvas.configure(
+                scrollregion= self.canvas.bbox("all")
+            )
+        )
+
+        self.canvas.create_window((0,0),window=self.scrollable_frame,anchor='nw',width=560)
+        self.canvas.configure(yscrollcommand=self.scrollbar.set)
+
+
+        for i in range(4,0,-1):
+            Button(self.scrollable_frame, text="Sample scrolling button{}".format(i),width=80,height= 4).pack()
+            
+        
 a = grouproom()
 a.window.mainloop()
