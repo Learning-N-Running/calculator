@@ -18,9 +18,13 @@ def btnLogin():
     real_password = login_password_entry.get()
     login_password,ready_login_check= login_check(real_userId)
     if ready_login_check==True and login_password==real_password:
-        success_login_label = Label(login_frame, text="로그인 성공")
-        success_login_label.grid(row = 3, column = 1, padx = 10, pady = 10)
-        success_login_label.after(2000,success_login_label.destroy)
+        # success_login_label = Label(login_frame, text="로그인 성공")
+        # success_login_label.grid(row = 3, column = 1, padx = 10, pady = 10)
+        # success_login_label.after(200000,success_login_label.destroy)
+        success_login_response = msgbox.showinfo("로그인 성공","로그인되었습니다.")
+        if success_login_response=='ok':
+            window.destroy()
+            import AfterLogIn
 
     elif ready_login_check==True and login_password!=real_password:
         fail_login_label = Label(login_frame, text="비밀번호가 정확하지 않습니다.")
@@ -29,7 +33,7 @@ def btnLogin():
             
     elif ready_login_check==False and login_password ==0:
         no_id_label = Label(login_frame, text="입력하신 ID는 존재하지 않습니다.")
-        no_id_label.grid(row = 5, column = 1, padx = 10, pady = 10)
+        no_id_label.grid(row = 5, column = 1,padx = 10, pady = 10) 
         no_id_label.after(2000,no_id_label.destroy)
 
 
@@ -172,8 +176,6 @@ sendTo_entry.grid(row=3, column=1, padx=10, pady=10)
 Button(join_frame, text="인증번호 받기", command=lambda:[new_sendEmail()]).grid(row=3, column=2, padx=10, pady=10)
 
 Button(join_frame, text="이전으로", command=lambda:[openFrame(login_frame)]).grid(row=7, column=0, padx=10, pady=10)
-
-
 
 
 
