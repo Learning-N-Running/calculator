@@ -1,4 +1,3 @@
-from tabnanny import check
 from tkinter import *
 import tkinter.messagebox as msgbox
 from tkinter.ttk import Labelframe
@@ -37,6 +36,8 @@ def insert_and_check_group(gName, gPW):
     try:
         insertData(gName, gPW)
         add_menu.destroy()
+        insertGroupIntoList()
+
     except IntegrityError:
         msgbox.showerror(title="error", message="중복되는 ID 입니다.")
 
@@ -55,7 +56,6 @@ def callback(*args):
 
     
 def addGroup():
-    init_db_when_start()
     global add_menu
     add_menu = Toplevel(window)
     add_menu.geometry("400x380")
@@ -100,6 +100,10 @@ def addList(frame):
 def SearchGroup():
     print("그룹을 찾습니다")
 
+def insertGroupIntoList():
+    group_list.insert(END, getGroupInfo()[-1])
+
+init_db_when_start()
 
 #메뉴 
 menu_info = Menu(menu,tearoff=0)
@@ -124,9 +128,15 @@ frame_group.pack(fill='both',expand=True,padx=10,pady=10)
 group_scrollbar = Scrollbar(frame_group)
 group_scrollbar.pack(side='right',fill='y')
 
-group_list = Listbox(frame_group,selectmode='single',yscrollcommand=group_scrollbar.set)
+group_list = Listbox(frame_group,selectmode='single', yscrollcommand=group_scrollbar.set)
 #height값을 줘야할지 말아야할지 고민
 group_list.pack(side='left', fill='both',expand=True)
+
+btn_enter = Button(window, text="입장")
+btn_enter.pack()
+
+for i in getGroupInfo():
+    group_list.insert(END, i)
 
 group_scrollbar.config(command=group_list.yview)
 
