@@ -1,10 +1,8 @@
 #방 만들고 들어갔을 때 
-from textwrap import fill
 from tkinter import *
 from tkinter.font import *
 import tkinter.messagebox as msgbox
 from tkinter import ttk
-from turtle import bgcolor, left, width
 
 def openFrame(frame):
     frame.tkraise()
@@ -120,6 +118,6 @@ class grouproom:
         for i in range(10,0,-1):
             Button(self.add_event_scrollable_frame, text="Sample scrolling button{}".format(i),width=80,height= 7).pack()
             
-        
-a = grouproom()
-a.window.mainloop()
+if __name__=='__main__':
+    a = grouproom()
+    a.window.mainloop()

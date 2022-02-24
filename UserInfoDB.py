@@ -107,8 +107,15 @@ def insertData(groupName, groupSite, groupPw):
     cur.execute("select count(*) from UserGroup")
     groupId = cur.fetchone()[0] + 1
 
-    cur.execute("insert into UserGroup VALUES(?, ?, ?, ?)", (groupId, groupName, groupSite, groupPw))
+    cur.execute("INSERT INTO UserGroup VALUES(?, ?, ?, ?)", (groupId, groupName, groupSite, groupPw))
     con.commit()
+
+    #확인을 위해 UserGroup도 같이 불러오게 만듦. 최종적으로는 지워야 할 부분
+    cur.execute("SELECT * FROM UserGroup")
+    rows = cur.fetchall()
+    for row in rows:
+        print(row)
+        
     with con:
         with open("dump_script.sql", 'w',encoding='utf-8') as f:
             for line in con.iterdump():

@@ -8,6 +8,7 @@ from UserInfoDB import getGroupInfo, insertData
 from UserInfoDB import find_username_email
 from watch_my_info import *
 from change_pw import *
+from group_room import *
 
 
 window = Tk()
@@ -45,14 +46,24 @@ def callback(*args):
         else:
             lb_var.set("다시 입력하세요.")
     
+def add_group_complete(): #모임 추가화면에서 확인 눌렀을 때
+    insertData(groupName.get(), groupSite.get(), groupPw.get())
+    msgbox.showinfo("그룹 추가","그룹이 정상적으로 추가되었습니다.")
+
+    #변경사항
+    window.destroy()
+    gr = grouproom()
+    gr.window.mainloop()
+
+
 
 def addGroup():
-    global add_menu
+    global add_menu,groupName,groupSite,groupPw
     add_menu = Toplevel(window)
     add_menu.geometry("400x400")
-    add_menu.title("모임을 추가합니다.")
+    add_menu.title("그룹을 추가합니다.")
     
-    Label(add_menu, padx=40, pady=20, text="모임 이름").grid()
+    Label(add_menu, padx=40, pady=20, text="그룹 이름").grid()
     groupName = Entry(add_menu)
     groupName.grid(row=0, column=1)
 
@@ -83,7 +94,7 @@ def addGroup():
     check_label = Label(add_menu, textvariable=lb_var, background="ivory")
     check_label.grid()
 
-    Button(add_menu, padx=30, pady=5, text="확인", command=lambda:[insertData(groupName.get(), groupSite.get(), groupPw.get())]).grid(row=5, column=0)
+    Button(add_menu, padx=30, pady=5, text="확인", command=add_group_complete).grid(row=5, column=0)
     Button(add_menu, padx=30, pady=5, text="취소").grid(row=5, column=1)
 
     # add_menu.bind("<Keys>", checkPassword)
