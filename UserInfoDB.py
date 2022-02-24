@@ -90,7 +90,7 @@ def login_check(real_userId): #아이디 비번 대조하는 것
     try:
         sen = 'Select password From UserTable WHERE id="{}"'.format(real_userId)
         cur.execute(sen)
-        login_password = ''.join(cur.fetchone())
+        login_password = ''.join(cur.fetchone())   ##문제 발생 가능 지점
         # print("입력하신 ID가 있군요!") #최종적으로는 지우자.
         con.close()
         ready_login_check=True
@@ -115,7 +115,7 @@ def insertData(groupName, groupSite, groupPw):
     rows = cur.fetchall()
     for row in rows:
         print(row)
-
+    
     with con:
         with open("dump_script.sql", 'w',encoding='utf-8') as f:
             for line in con.iterdump():

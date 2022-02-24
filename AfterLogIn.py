@@ -54,20 +54,6 @@ def add_group_complete(): #모임 추가화면에서 확인 눌렀을 때
     window.destroy()
     gr = grouproom(str(group_name))
 
-    with open('login_info.txt','r') as f:
-        datas = f.readlines()
-        for data in datas:
-            data=data.strip()
-            if data.startswith('id'):
-                login_id = data.split()[1]
-                break
-    # with open('group_member_list.py','w') as f:
-    #     f.write("group{}")  ##
-
-    #여기서 더 추가해야함.
-
-
-
     gr.window.mainloop()
 
 
