@@ -1,12 +1,10 @@
-import email
 import tkinter as tk
 from tkinter import *
-from tokenize import blank_re
 from account import *
 import tkinter.messagebox as msgbox
 
 import email_test as et
-from UserInfoDB import userUpdate,login_check,init_db_when_start
+from UserInfoDB import confirm_id_dup, userUpdate,login_check,init_db_when_start
 
 def openFrame(frame):
     frame.tkraise()
@@ -18,16 +16,25 @@ def btnLogin():
     real_password = login_password_entry.get()
     login_password,ready_login_check= login_check(real_userId)
     if ready_login_check==True and login_password==real_password:
+<<<<<<< HEAD
         # success_login_label = Label(login_frame, text="로그인 성공")
         # success_login_label.grid(row = 3, column = 1, padx = 10, pady = 10)
         # success_login_label.after(200000,success_login_label.destroy)
         success_login_response = msgbox.showinfo("로그인 성공","로그인되었습니다.")
+=======
+        success_login_response = msgbox.showinfo("로그인 성공","로그인되었습니다.")
+        with open('login_info.txt','w') as f:
+            id_line = 'id: '+ str(real_userId) + ' \n'
+            pw_line = 'pw: '+ str(login_password) +' \n'
+            f.write(id_line)
+            f.write(pw_line)
+>>>>>>> 2ff39b39d2522ec1edb8c3993b57135a6d4be73e
         if success_login_response=='ok':
             window.destroy()
             import AfterLogIn
 
     elif ready_login_check==True and login_password!=real_password:
-        fail_login_label = Label(login_frame, text="비밀번호가 정확하지 않습니다.")
+        fail_login_label = Label(login_frame, text="비밀번호를 잘못 입력하셨습니다.")
         fail_login_label.grid(row = 4, column = 1, padx = 10, pady = 10)
         fail_login_label.after(2000,fail_login_label.destroy)    
             
@@ -51,20 +58,42 @@ def get_uups():
     sendTo = sendTo_entry.get()
 
 def new_userUpdate():
-    get_uups()
-    userUpdate(userId,userName,sendTo,password)
+    check_all_info()
+    global id_dup_switch
+    if ready_send_certification_num==True:
+        response = confirm_id_dup(userId)
+        if response == False:
+            msgbox.showinfo("아이디 중복","동일한 ID가 이미 존재합니다.\n \n다른 ID로 회원가입해주세요.")
+            id_dup_switch = 'dup'
+        elif response==userId:
+            id_dup_switch = 'usable'
 
-    userName_entry.delete(0,'end')
-    userId_entry.delete(0,'end')
-    password_entry.delete(0,'end')
-    sendTo_entry.delete(0,'end')
-    certification_entry.delete(0,'end')
-    input_certnum_label.destroy()
-    certification_entry.destroy()
-    cert_num_ok_button.destroy()
-    check_certnum_complete_button.destroy()
+        if id_dup_switch=='usable':
+            userUpdate(userId,userName,sendTo,password)
 
-    openFrame(login_frame)
+            userName_entry.delete(0,'end')
+            userId_entry.delete(0,'end')
+            password_entry.delete(0,'end')
+            sendTo_entry.delete(0,'end')
+            certification_entry.delete(0,'end')
+            input_certnum_label.destroy()
+            certification_entry.destroy()
+            cert_num_ok_button.destroy()
+            check_certnum_complete_button.destroy()
+
+            openFrame(login_frame)
+        else:
+            certification_entry.delete(0,'end')
+            input_certnum_label.destroy()
+            certification_entry.destroy()
+            cert_num_ok_button.destroy()
+            check_certnum_complete_button.destroy()
+    else:
+        certification_entry.delete(0,'end')
+        input_certnum_label.destroy()
+        certification_entry.destroy()
+        cert_num_ok_button.destroy()
+        check_certnum_complete_button.destroy()
 
 def check_all_info(): #이메일 확인 전에 모든 정보를 다 입력했나 확인하는 것
     get_uups()
@@ -120,6 +149,32 @@ def check_certnum(): #인증번호 대조
         cannot_certificate_label.grid(row=6, column=1, padx=10, pady=10)
         cannot_certificate_label.after(2000,cannot_certificate_label.destroy)
 
+def go_back():
+    userName_entry.delete(0,'end')
+    userId_entry.delete(0,'end')
+    password_entry.delete(0,'end')
+    sendTo_entry.delete(0,'end')
+    try:
+        certification_entry.delete(0,'end')
+        input_certnum_label.destroy()
+        certification_entry.destroy()
+        cert_num_ok_button.destroy()
+        check_certnum_complete_button.destroy()
+    except:
+        pass
+    openFrame(login_frame)
+
+def new_confirm_id_dup():
+    global userId,id_dup_switch
+    userId=userId_entry.get()
+    response = confirm_id_dup(userId)
+    if response == False:
+        msgbox.showinfo("아이디 중복","동일한 ID가 이미 존재합니다.\n \n다른 ID로 회원가입해주세요.")
+        id_dup_switch = 'dup'
+    elif response==userId:
+        msgbox.showinfo("아이디 사용 가능","사용 가능한 ID입니다.")
+        id_dup_switch = 'usable'
+
 
             
 
@@ -139,12 +194,8 @@ login_frame.grid(row=0, column=0, sticky="nsew")
 join_frame.grid(row=0, column=0, sticky="nsew")
 
 #login frame
-# login_userId_entry, login_password_entry = StringVar(), StringVar()
-
 Label(login_frame, text = "User ID : ").grid(row = 0, column = 0, padx = 10, pady = 10)
 Label(login_frame, text = "Password : ").grid(row = 1, column = 0, padx = 10, pady = 10)
-# Entry(login_frame, textvariable = login_userId_entry).grid(row = 0, column = 1, padx = 10, pady = 10)
-# Entry(login_frame, textvariable = login_password_entry, show='*').grid(row = 1, column = 1, padx = 10, pady = 10)
 
 login_userId_entry =Entry(login_frame)
 login_userId_entry.grid(row = 0, column = 1, padx = 10, pady = 10)
@@ -172,11 +223,16 @@ Label(join_frame, text="email").grid(row=3, column=0, padx=10, pady=10)
 sendTo_entry = Entry(join_frame, width = 30)
 sendTo_entry.grid(row=3, column=1, padx=10, pady=10)
 
+Button(join_frame, text="ID 중복 확인", command=new_confirm_id_dup).grid(row=1, column=2, padx=10, pady=10)
 
 Button(join_frame, text="인증번호 받기", command=lambda:[new_sendEmail()]).grid(row=3, column=2, padx=10, pady=10)
 
+<<<<<<< HEAD
 Button(join_frame, text="이전으로", command=lambda:[openFrame(login_frame)]).grid(row=7, column=0, padx=10, pady=10)
 
+=======
+Button(join_frame, text="이전으로", command=go_back).grid(row=7, column=0, padx=10, pady=10)
+>>>>>>> 2ff39b39d2522ec1edb8c3993b57135a6d4be73e
 
 
 openFrame(login_frame)

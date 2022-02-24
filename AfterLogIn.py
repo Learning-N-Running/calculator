@@ -1,8 +1,13 @@
+from tabnanny import check
 from tkinter import *
 import tkinter.messagebox as msgbox
 from tkinter.ttk import Labelframe
+from tkinter.font import *
 
 from UserInfoDB import getGroupInfo, insertData
+from UserInfoDB import find_username_email
+from watch_my_info import *
+from change_pw import *
 
 
 window = Tk()
@@ -11,23 +16,34 @@ window.geometry("640x480")
 
 menu = Menu(window)
 
+
 #함수 정리
+def openFrame(frame):
+    frame.tkraise()
+
 def CheckMyInfo():
     print("내 정보를 확인합니다.")
+    win_cmi = Toplevel(window)
+    cmi = watchmyinfo(win_cmi)
+    cmi.second()
 
 def ChangePW():
-    response = msgbox.askokcancel("비밀번호 변경 확인","비밀번호를 변경하시겠습니까?")
-    if response==1: #확인
-        print("비밀번호를 변경합니다.")
+    win_cpw = Toplevel(window)
+    cpw = changepw(win_cpw)
+
 
 def callback(*args):
     a = pw_var.get()
     b = pw_check_var.get()
-
-    if a==b:
-        lb_var.set("success")
-    else:
+    blank_list = [' '*n for n in range(1,11)]
+    blank_list.append('')
+    if a in blank_list or b in blank_list:
         lb_var.set("다시 입력하세요.")
+    else:
+        if a==b:
+            lb_var.set("success")
+        else:
+            lb_var.set("다시 입력하세요.")
     
 
 def addGroup():
@@ -39,10 +55,6 @@ def addGroup():
     Label(add_menu, padx=40, pady=20, text="모임 이름").grid()
     groupName = Entry(add_menu)
     groupName.grid(row=0, column=1)
-
-    Label(add_menu, padx=40, pady=20, text="지역").grid()
-    groupSite = Entry(add_menu)
-    groupSite.grid(row=1, column=1)
 
     global pw_var
     pw_var = StringVar()
@@ -62,6 +74,7 @@ def addGroup():
     groupPw_check.grid(row=3, column=1)
 
     pw_check_var.trace('w', callback)
+    pw_var.trace('w', callback)
 
     check_label = Label(add_menu, textvariable=lb_var, background="ivory")
     check_label.grid()
@@ -79,6 +92,7 @@ def addList(frame):
 
 def SearchGroup():
     print("그룹을 찾습니다")
+
 
 #메뉴 
 menu_info = Menu(menu,tearoff=0)
