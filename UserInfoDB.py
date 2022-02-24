@@ -9,7 +9,6 @@ from mysqlx import DatabaseError, IntegrityError
 # cur.execute('CREATE TABLE UserTable(id char(15), UserName char(5), email char(25), password char(15))')
 # CREATE TABLE UserGroup(groupId INTEGER PRIMARY KEY, groupName TEXT, groupSite CHAR(25), groupPw VARCHAR(15));
 
-
 #db 초기화
 def init_db_when_start():
     if os.path.isfile('login_info.txt'):
@@ -97,6 +96,9 @@ def login_check(real_userId): #아이디 비번 대조하는 것
         # print("입력하신 ID가 있군요!") #최종적으로는 지우자.
         con.close()
         ready_login_check=True
+
+        global user_id
+        user_id = real_userId
         return login_password,ready_login_check
     except TypeError:
         # print("입력하신 ID는 없습니다.")
@@ -108,10 +110,13 @@ def insertData(groupName, groupPw):
     con = sqlite3.connect("temp.db")
     cur = con.cursor()
     cur.execute("select count(*) from UserGroup")
+    global groupId
     groupId = cur.fetchone()[0] + 1
 
     cur.execute("insert into UserGroup VALUES(?, ?, ?)", (groupId, groupName, groupPw))
+
     con.commit()
+    insertParticipation()
     with con:
         with open("dump_script.sql", 'w',encoding='utf-8') as f:
             for line in con.iterdump():
@@ -122,7 +127,7 @@ def insertData(groupName, groupPw):
 def getGroupInfo():
     con = sqlite3.connect("temp.db")
     cur = con.cursor()
-    cur.execute("select groupName from UserGroup")
+    cur.execute('SELECT GroupName FROM UserGroup G, UserTable U, Participation P WHERE G.groupId=P.groupId and U.id="{}"'.format(user_id))
     gName = cur.fetchall()
     
     return gName
@@ -150,6 +155,13 @@ def change_pw(present_pw,new_pw):
                 f.write('%s\n' % line)
     con.close()
 
+def insertParticipation():
+    con = sqlite3.connect("temp.db")
+    cur = con.cursor()
+    cur.execute("insert into Participation VALUES(?, ?)", (groupId, user_id))
+    con.commit()
+    con.close()
+
 
 
 # if __name__=='__main__':
@@ -157,7 +169,6 @@ def change_pw(present_pw,new_pw):
 #     cur = con.cursor()
 #     cur.execute("SELECT * FROM UserTable")
 #     rows = cur.fetchall()
-    
 #     for row in rows:
 #         print(row)
 #     con.close()

@@ -5,7 +5,7 @@ from tkinter.font import *
 
 from sqlite3 import IntegrityError
 
-from UserInfoDB import getGroupInfo, insertData, init_db_when_start
+from UserInfoDB import getGroupInfo, insertData, init_db_when_start, insertParticipation
 from UserInfoDB import find_username_email
 from watch_my_info import *
 from change_pw import *
@@ -37,9 +37,11 @@ def insert_and_check_group(gName, gPW):
         insertData(gName, gPW)
         add_menu.destroy()
         insertGroupIntoList()
+        # insertParticipation()
 
     except IntegrityError:
         msgbox.showerror(title="error", message="중복되는 ID 입니다.")
+
 
 def callback(*args):
     a = pw_var.get()
