@@ -20,11 +20,8 @@ class grouproom:
         self.font1=Font(family="맑은 고딕", size=30)
         self.font2=Font(family="맑은 고딕", size=15)
         
-
         self.group_name_label = Label(self.window, text=self.group_name, font=self.font1)
         self.group_name_label.pack(pady=20)
-
-
 
         self.left_space_label = Label(self.window,text="")
         self.left_space_label.pack(ipadx=20,ipady=220,side="left")
