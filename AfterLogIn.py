@@ -4,7 +4,9 @@ import tkinter.messagebox as msgbox
 from tkinter.ttk import Labelframe
 from tkinter.font import *
 
-from UserInfoDB import getGroupInfo, insertData
+from sqlite3 import IntegrityError
+
+from UserInfoDB import getGroupInfo, insertData, init_db_when_start
 from UserInfoDB import find_username_email
 from watch_my_info import *
 from change_pw import *
@@ -31,6 +33,12 @@ def ChangePW():
     win_cpw = Toplevel(window)
     cpw = changepw(win_cpw)
 
+def insert_and_check_group(gName, gPW):
+    try:
+        insertData(gName, gPW)
+        add_menu.destroy()
+    except IntegrityError:
+        msgbox.showerror(title="error", message="중복되는 ID 입니다.")
 
 def callback(*args):
     a = pw_var.get()
@@ -41,18 +49,19 @@ def callback(*args):
         lb_var.set("다시 입력하세요.")
     else:
         if a==b:
-            lb_var.set("success")
+            lb_var.set("비밀번호가 일치합니다.")
         else:
-            lb_var.set("다시 입력하세요.")
-    
+            lb_var.set("비밀번호를 다시 입력하세요.")
 
+    
 def addGroup():
+    init_db_when_start()
     global add_menu
     add_menu = Toplevel(window)
-    add_menu.geometry("400x400")
+    add_menu.geometry("400x380")
     add_menu.title("모임을 추가합니다.")
     
-    Label(add_menu, padx=40, pady=20, text="모임 이름").grid()
+    Label(add_menu, padx=40, pady=30, text="모임 이름").grid()
     groupName = Entry(add_menu)
     groupName.grid(row=0, column=1)
 
@@ -63,27 +72,25 @@ def addGroup():
     global lb_var
     lb_var = StringVar()
 
-    Label(add_menu, padx=40, pady=20, text="비밀번호").grid()
+    Label(add_menu, padx=80, pady=30, text="비밀번호").grid()
     global groupPw
     groupPw = Entry(add_menu, textvariable=pw_var)
-    groupPw.grid(row=2, column=1)
+    groupPw.grid(row=1, column=1)
 
-    Label(add_menu, padx=40, pady=20, text="비밀번호 확인").grid()
+    Label(add_menu, padx=40, pady=30, text="비밀번호 확인").grid()
     global groupPw_check
     groupPw_check = Entry(add_menu, textvariable=pw_check_var)
-    groupPw_check.grid(row=3, column=1)
+    groupPw_check.grid(row=2, column=1)
 
     pw_check_var.trace('w', callback)
-    pw_var.trace('w', callback)
 
-    check_label = Label(add_menu, textvariable=lb_var, background="ivory")
-    check_label.grid()
+    check_label = Label(add_menu, pady=10, textvariable=lb_var, fg="red", justify=LEFT)
+    check_label.grid(row=3, columnspan=2)
 
-    Button(add_menu, padx=30, pady=5, text="확인", command=lambda:[insertData(groupName.get(), groupSite.get(), groupPw.get())]).grid(row=5, column=0)
-    Button(add_menu, padx=30, pady=5, text="취소").grid(row=5, column=1)
+    Button(add_menu, padx=30, pady=10, text="확인", command=lambda:[insert_and_check_group(groupName.get(), groupPw.get())]).grid(row=4, column=0)
+    Button(add_menu, padx=30, pady=10, text="취소", command=add_menu.destroy).grid(row=4, column=1)
 
-    # add_menu.bind("<Keys>", checkPassword)
-
+    
 def addList(frame):
     group_list = getGroupInfo()
     for i in range(len(group_list)):

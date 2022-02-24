@@ -1,6 +1,9 @@
 from ast import expr_context
+from tkinter import messagebox
 import sqlite3
 import os
+
+from mysqlx import DatabaseError, IntegrityError
 
 #지우면 안됨.
 # cur.execute('CREATE TABLE UserTable(id char(15), UserName char(5), email char(25), password char(15))')
@@ -101,13 +104,13 @@ def login_check(real_userId): #아이디 비번 대조하는 것
         login_password= 0
         return login_password ,ready_login_check
 
-def insertData(groupName, groupSite, groupPw):
+def insertData(groupName, groupPw):
     con = sqlite3.connect("temp.db")
     cur = con.cursor()
     cur.execute("select count(*) from UserGroup")
     groupId = cur.fetchone()[0] + 1
 
-    cur.execute("insert into UserGroup VALUES(?, ?, ?, ?)", (groupId, groupName, groupSite, groupPw))
+    cur.execute("insert into UserGroup VALUES(?, ?, ?)", (groupId, groupName, groupPw))
     con.commit()
     with con:
         with open("dump_script.sql", 'w',encoding='utf-8') as f:
@@ -161,5 +164,6 @@ def change_pw(present_pw,new_pw):
 
 # login_check('tina_id')
 # delete('poo_id')
-confirm_id_dup('jk_id')
+
+# confirm_id_dup('jk_id')
 
