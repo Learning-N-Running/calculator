@@ -1,6 +1,5 @@
 BEGIN TRANSACTION;
 CREATE TABLE UserGroup(groupId INTEGER PRIMARY KEY, groupName TEXT, groupSite CHAR(25), groupPw VARCHAR(15));
-INSERT INTO "UserGroup" VALUES(1,'1234','1234','1234');
 CREATE TABLE UserTable(id char(15), UserName char(5), email char(25), password char(15));
 INSERT INTO "UserTable" VALUES('tina_id','tina_name','seungeun020309@gmail.com','tina_pw');
 INSERT INTO "UserTable" VALUES('jh_id','jh_name','seungeun020309@gmail.com','jh_pw');

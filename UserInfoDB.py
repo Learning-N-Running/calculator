@@ -115,7 +115,7 @@ def insertData(groupName, groupSite, groupPw):
     rows = cur.fetchall()
     for row in rows:
         print(row)
-        
+
     with con:
         with open("dump_script.sql", 'w',encoding='utf-8') as f:
             for line in con.iterdump():
@@ -130,6 +130,8 @@ def getGroupInfo():
     gName = cur.fetchall()
     
     return gName
+
+
 
 def find_username_email(login_id):
     con = sqlite3.connect("temp.db")

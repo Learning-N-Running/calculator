@@ -8,17 +8,17 @@ def openFrame(frame):
     frame.tkraise()
 
 class grouproom:
-    def __init__(self):
+    def __init__(self,groupName):
         self.window = Tk()
-        self.group_name = "00그룹"  #여기다가 모임 이름 넣으면 좋을 듯
-        self.window.title(self.group_name)  
+        self.groupName = groupName  #여기다가 모임 이름 넣으면 좋을 듯
+        self.window.title(self.groupName)  
         self.window.geometry("640x480")
         self.window.resizable(False,False)
 
         self.font1=Font(family="맑은 고딕", size=30)
         self.font2=Font(family="맑은 고딕", size=15)
         
-        self.group_name_label = Label(self.window, text=self.group_name, font=self.font1)
+        self.group_name_label = Label(self.window, text=self.groupName, font=self.font1)
         self.group_name_label.pack(pady=20)
 
         self.left_space_label = Label(self.window,text="")

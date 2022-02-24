@@ -47,12 +47,27 @@ def callback(*args):
             lb_var.set("다시 입력하세요.")
     
 def add_group_complete(): #모임 추가화면에서 확인 눌렀을 때
-    insertData(groupName.get(), groupSite.get(), groupPw.get())
+    insertData(groupName.get(), groupSite.get(), groupPw.get()) #여기서 그룹번호를 return하게 만들기
     msgbox.showinfo("그룹 추가","그룹이 정상적으로 추가되었습니다.")
+    group_name = groupName.get()
 
-    #변경사항
     window.destroy()
-    gr = grouproom()
+    gr = grouproom(str(group_name))
+
+    with open('login_info.txt','r') as f:
+        datas = f.readlines()
+        for data in datas:
+            data=data.strip()
+            if data.startswith('id'):
+                login_id = data.split()[1]
+                break
+    # with open('group_member_list.py','w') as f:
+    #     f.write("group{}")  ##
+
+    #여기서 더 추가해야함.
+
+
+
     gr.window.mainloop()
 
 
