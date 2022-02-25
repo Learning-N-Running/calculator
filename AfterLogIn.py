@@ -15,6 +15,7 @@ from group_room import *
 window = Tk()
 window.title("계산기")
 window.geometry("640x480")
+window.resizable(False,False)
 
 menu = Menu(window)
 
@@ -186,7 +187,7 @@ group_list_canvas.configure(yscrollcommand=group_list_scrollbar.set)
 # for i in range(10):
 #     Button(group_list_scrollable_frame, text="Sample Group button{}".format(i),width=53,height= 6,font=font2).pack()
 
-class kkk():
+class make_group_class():
     def __init__(self,user_group):
         self.user_group = user_group
         self.group_button = Button(group_list_scrollable_frame,text=self.user_group,width=53,height= 6,font=font2,command = lambda :[self.group_button_func()]).pack()
@@ -198,7 +199,7 @@ class kkk():
 
 
 for user_group in user_group_list:
-    globals()['{}_group_class'.format(user_group)] = kkk(user_group)
+    globals()['{}_group_class'.format(user_group)] = make_group_class(user_group)
 
 
 window.config(menu=menu)

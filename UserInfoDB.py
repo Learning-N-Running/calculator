@@ -183,26 +183,27 @@ def insertParticipation():
     con.close()
 
 def find_user_group():
-    con = sqlite3.connect("temp.db")
-    cur = con.cursor()
-    with open('login_info.txt','r') as f:
-        datas= f.readlines()
-        for data in datas:
-            data.strip()
-            if data.startswith('id'):
-                login_id = data.split()[1]
-                break
-    sen = 'Select groupId From Participation WHERE userId="{}"'.format(login_id)
-    cur.execute(sen)
-    group_ids = cur.fetchall()
-    user_group_list= []
-    for group_id in group_ids:
-        sen = 'Select groupName From UserGroup WHERE groupId="{}"'.format(group_id[0])
+    if os.path.isfile('login_info.txt'):
+        con = sqlite3.connect("temp.db")
+        cur = con.cursor()
+        with open('login_info.txt','r') as f:
+            datas= f.readlines()
+            for data in datas:
+                data.strip()
+                if data.startswith('id'):
+                    login_id = data.split()[1]
+                    break
+        sen = 'Select groupId From Participation WHERE userId="{}"'.format(login_id)
         cur.execute(sen)
-        user_group = cur.fetchone()[0]
-        user_group_list.append(user_group)
-    con.close()
-    return user_group_list
+        group_ids = cur.fetchall()
+        user_group_list= []
+        for group_id in group_ids:
+            sen = 'Select groupName From UserGroup WHERE groupId="{}"'.format(group_id[0])
+            cur.execute(sen)
+            user_group = cur.fetchone()[0]
+            user_group_list.append(user_group)
+        con.close()
+        return user_group_list
 
 
 
