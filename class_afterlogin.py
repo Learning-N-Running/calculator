@@ -88,6 +88,8 @@ class after_log:  #after_login.py를 클래스화 한 것
 
         for user_group in self.user_group_list:
             globals()['self.{}_group_class'.format(user_group)] = make_group_class(self,user_group)
+        
+        self.window.config(menu=self.menu)
     
     def CheckMyInfo(self):
         print("내 정보를 확인합니다.")
@@ -208,4 +210,5 @@ class after_log:  #after_login.py를 클래스화 한 것
 # window.mainloop()
 
 k = after_log()
+
 k.window.mainloop()

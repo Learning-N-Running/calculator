@@ -1,9 +1,9 @@
 
 
 class hi:
-    # def __init__(self):
-    #     self.a =1
+    def __init__(self):
+        self.p =1
     def ki(self):
         return 1
-
-print(hi.ki(a))
+a = hi()
+a.ki()
