@@ -24,8 +24,7 @@ def btnLogin():
             f.write(pw_line)
         if success_login_response=='ok':
             window.destroy()
-            # import AfterLogIn
-            import test_AfterLogin
+            import AfterLogIn
 
     elif ready_login_check==True and login_password!=real_password:
         fail_login_label = Label(login_frame, text="비밀번호를 잘못 입력하셨습니다.")
