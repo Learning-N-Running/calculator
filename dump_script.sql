@@ -4,6 +4,7 @@ INSERT INTO "Participation" VALUES(1,'tina_id');
 INSERT INTO "Participation" VALUES(2,'tina_id');
 INSERT INTO "Participation" VALUES(3,'tina_id');
 INSERT INTO "Participation" VALUES(4,'tina_id');
+INSERT INTO "Participation" VALUES(1,'gina_id');
 CREATE TABLE UserGroup(groupId INTEGER PRIMARY KEY, groupName VARCHAR(30) unique, groupPw VARCHAR(15));
 INSERT INTO "UserGroup" VALUES(1,'tina_first_group','1234');
 INSERT INTO "UserGroup" VALUES(2,'tina_second_group','1234');

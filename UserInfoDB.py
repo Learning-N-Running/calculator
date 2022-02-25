@@ -205,23 +205,32 @@ def find_user_group():  #로그인한 유저가 속해있는 그룹들을 리스
         con.close()
         return user_group_list
 
-# def find_group_members(): #그룹의 멤버들을 리스트로 반환해주는 함수
-#     con = sqlite3.connect("temp.db")
-#     cur = con.cursor()
-
-
-
-
-
-
-if __name__=='__main__':
+def find_group_members(groupName): #그룹의 멤버들을 리스트로 반환해주는 함수
     con = sqlite3.connect("temp.db")
     cur = con.cursor()
-    cur.execute('CREATE TABLE IF NOT EXISTS UserTable(id char(15), UserName char(5), email char(25), password char(15))')
-    cur.execute('CREATE TABLE IF NOT EXISTS UserGroup(groupId INTEGER PRIMARY KEY, groupName VARCHAR(30) unique, groupPw VARCHAR(15));')
-    cur.execute('CREATE TABLE IF NOT EXISTS Participation(groupId INTEGER, userId char(15), PRIMARY KEY(groupId, userId));')
-    con.commit()
-    con.close()
+    sen = 'Select groupId From UserGroup WHERE groupName="{}"'.format(groupName)
+    cur.execute(sen)
+    group_id = cur.fetchone()[0]
+    sen = 'Select userId From Participation WHERE groupId={}'.format(group_id)
+    cur.execute(sen)
+    group_members = cur.fetchall()
+    group_member_list = []
+    for group_member in group_members:
+        gm = group_member[0]
+        group_member_list.append(gm)
+    return group_member_list
+
+
+
+
+# if __name__=='__main__':
+#     con = sqlite3.connect("temp.db")
+#     cur = con.cursor()
+#     cur.execute('CREATE TABLE IF NOT EXISTS UserTable(id char(15), UserName char(5), email char(25), password char(15))')
+#     cur.execute('CREATE TABLE IF NOT EXISTS UserGroup(groupId INTEGER PRIMARY KEY, groupName VARCHAR(30) unique, groupPw VARCHAR(15));')
+#     cur.execute('CREATE TABLE IF NOT EXISTS Participation(groupId INTEGER, userId char(15), PRIMARY KEY(groupId, userId));')
+#     con.commit()
+#     con.close()
 
 #     con = sqlite3.connect("temp.db")
 #     cur = con.cursor()
@@ -234,7 +243,4 @@ if __name__=='__main__':
 # login_check('tina_id')
 # delete('poo_id')
 
-# confirm_id_dup('jk_id')
-
-find_user_group()
-
+# print(find_group_members('tina_first_group'))
