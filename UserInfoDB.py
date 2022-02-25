@@ -5,13 +5,6 @@ import sqlite3
 import os
 
 
-con = sqlite3.connect("temp.db")
-cur = con.cursor()
-cur.execute('CREATE TABLE IF NOT EXISTS UserTable(id char(15), UserName char(5), email char(25), password char(15))')
-cur.execute('CREATE TABLE IF NOT EXISTS UserGroup(groupId INTEGER PRIMARY KEY, groupName VARCHAR(30) unique, groupPw VARCHAR(15));')
-cur.execute('CREATE TABLE IF NOT EXISTS Participation(groupId INTEGER, userId char(15), PRIMARY KEY(groupId, userId));')
-con.commit()
-con.close()
 
 #db 초기화
 def init_db_when_start():
@@ -189,7 +182,7 @@ def insertParticipation():
     con.commit()
     con.close()
 
-def find_user_group():
+def find_user_group():  #로그인한 유저가 속해있는 그룹들을 리스트로 return해주는 함수
     if os.path.isfile('login_info.txt'):
         con = sqlite3.connect("temp.db")
         cur = con.cursor()
@@ -212,10 +205,24 @@ def find_user_group():
         con.close()
         return user_group_list
 
+# def find_group_members(): #그룹의 멤버들을 리스트로 반환해주는 함수
+#     con = sqlite3.connect("temp.db")
+#     cur = con.cursor()
 
 
 
-# if __name__=='__main__':
+
+
+
+if __name__=='__main__':
+    con = sqlite3.connect("temp.db")
+    cur = con.cursor()
+    cur.execute('CREATE TABLE IF NOT EXISTS UserTable(id char(15), UserName char(5), email char(25), password char(15))')
+    cur.execute('CREATE TABLE IF NOT EXISTS UserGroup(groupId INTEGER PRIMARY KEY, groupName VARCHAR(30) unique, groupPw VARCHAR(15));')
+    cur.execute('CREATE TABLE IF NOT EXISTS Participation(groupId INTEGER, userId char(15), PRIMARY KEY(groupId, userId));')
+    con.commit()
+    con.close()
+
 #     con = sqlite3.connect("temp.db")
 #     cur = con.cursor()
 #     cur.execute("SELECT * FROM UserTable")

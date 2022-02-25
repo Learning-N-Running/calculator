@@ -66,7 +66,8 @@ class watchmyinfo:
         else:
             response = msgbox.showwarning("경고","비밀번호를 잘못 입력하셨습니다.")
             if response=='ok':
-                self.newin.destroy()
+                self.identify_pw_entry.delete(0,'end')
+                self.newin.tkraise()
     
     def second(self):
         self.indentify_button=Button(self.identify_frame, text="확인", command=self.identify_button_func)
