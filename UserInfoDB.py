@@ -3,7 +3,6 @@ from tkinter import messagebox
 import sqlite3
 import os
 
-from mysqlx import DatabaseError, IntegrityError
 
 #지우면 안됨.
 # cur.execute('CREATE TABLE UserTable(id char(15), UserName char(5), email char(25), password char(15))')
