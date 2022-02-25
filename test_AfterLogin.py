@@ -53,7 +53,7 @@ def insert_and_check_group(gName, gPW):
             try:
                 insertData(gName, gPW)
                 # add_menu.destroy()
-                insertGroupIntoList()
+                # insertGroupIntoList()
                 add_group_complete()
                 # insertParticipation()
 
@@ -78,7 +78,6 @@ def callback(*args):
 def add_group_complete(): #모임 추가화면에서 확인 눌렀을 때 마지막으로 실행되는 함수
     msgbox.showinfo("그룹 추가","그룹이 정상적으로 추가되었습니다.")
     group_name = groupName.get()
-
 
     window.destroy()
 
@@ -127,11 +126,11 @@ def addGroup():
     # add_menu.bind("<Keys>", checkPassword)
 
     
-def addList(frame):
-    group_list = getGroupInfo()
-    for i in range(len(group_list)):
-        Label(frame, text=group_list[i], width=50, padx=10, pady=10, background="ivory").pack(expand=True, side="top")
-        Button(frame, text="입장", width=50, padx=10, pady=10).pack(expand=True)
+# def addList(frame):
+#     group_list = getGroupInfo()
+#     for i in range(len(group_list)):
+#         Label(frame, text=group_list[i], width=50, padx=10, pady=10, background="ivory").pack(expand=True, side="top")
+#         Button(frame, text="입장", width=50, padx=10, pady=10).pack(expand=True)
 
 def SearchGroup():
     print("그룹을 찾습니다")
@@ -187,6 +186,19 @@ group_list_canvas.configure(yscrollcommand=group_list_scrollbar.set)
 # for i in range(10):
 #     Button(group_list_scrollable_frame, text="Sample Group button{}".format(i),width=53,height= 6,font=font2).pack()
 
+class kkk():
+    def __init__(self,user_group):
+        self.user_group = user_group
+        self.group_button = Button(group_list_scrollable_frame,text=self.user_group,width=53,height= 6,font=font2,command = lambda :[self.group_button_func()]).pack()
+
+    def group_button_func(self):
+        window.destroy()
+        self.gr_win = grouproom(str(self.user_group))
+        self.gr_win.window.mainloop()
+
+
+for user_group in user_group_list:
+    globals()['{}_group_class'.format(user_group)] = kkk(user_group)
 
 
 window.config(menu=menu)

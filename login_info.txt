@@ -1,3 +1,2 @@
-id: tina_id 
-pw: tina_pw 
-21
+id: jh_id 
+pw: jh_pw 
