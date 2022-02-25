@@ -87,7 +87,7 @@ class grouproom:
         self.add_event_frame = Frame(self.window)
         self.add_event_frame.pack(side='top',ipadx=280,ipady=0) 
 
-        self.go_back_button = Button(self.add_event_frame, text='이전으로',font=self.font2)
+        self.go_back_button = Button(self.add_event_frame, text='이전으로',font=self.font2,command=lambda:[self.go_back_func()])
         self.go_back_button.pack(side='left',ipadx=5)
 
         self.add_event_button = Button(self.add_event_frame, text='이벤트 추가',font=self.font2)
@@ -117,7 +117,14 @@ class grouproom:
 
         for i in range(10,0,-1):
             Button(self.add_event_scrollable_frame, text="Sample scrolling button{}".format(i),width=80,height= 7).pack()
-            
+        
+        #새로 추가한 것
+    def go_back_func(self):
+        self.window.destroy()
+        import AfterLogIn
+
+
+
 if __name__=='__main__':
     a = grouproom()
     a.window.mainloop()
