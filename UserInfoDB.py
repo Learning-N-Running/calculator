@@ -5,10 +5,9 @@ import sqlite3
 import os
 
 
-#지우면 안됨.
-# cur.execute('CREATE TABLE UserTable(id char(15), UserName char(5), email char(25), password char(15))')
 con = sqlite3.connect("temp.db")
 cur = con.cursor()
+cur.execute('CREATE TABLE IF NOT EXISTS UserTable(id char(15), UserName char(5), email char(25), password char(15))')
 cur.execute('CREATE TABLE IF NOT EXISTS UserGroup(groupId INTEGER PRIMARY KEY, groupName VARCHAR(30) unique, groupPw VARCHAR(15));')
 cur.execute('CREATE TABLE IF NOT EXISTS Participation(groupId INTEGER, userId char(15), PRIMARY KEY(groupId, userId));')
 con.commit()
@@ -22,19 +21,27 @@ def init_db_when_start():
         os.remove("temp.db")
     con = sqlite3.connect("temp.db")
     cur = con.cursor()
-    f = open('dump_script.sql','r')
-    datas = f.readlines()
-    for data in datas:
-        if data.startswith('INSERT INTO'):
-            cur.execute(data)
-        elif data.startswith('CREATE TABLE'):
-            cur.execute(data)
+
+    # 테이블 추가할 때마다 여기에 넣어주기
+    cur.execute('CREATE TABLE IF NOT EXISTS UserTable(id char(15), UserName char(5), email char(25), password char(15))')
+    cur.execute('CREATE TABLE IF NOT EXISTS UserGroup(groupId INTEGER PRIMARY KEY, groupName VARCHAR(30) unique, groupPw VARCHAR(15));')
+    cur.execute('CREATE TABLE IF NOT EXISTS Participation(groupId INTEGER, userId char(15), PRIMARY KEY(groupId, userId));')
+
+    if os.path.isfile('dump_script.sql'):
+        f = open('dump_script.sql','r')
+        datas = f.readlines()
+        for data in datas:
+            if data.startswith('INSERT INTO'):
+                cur.execute(data)
+            # elif data.startswith('CREATE TABLE'):
+            #     cur.execute(data)
     con.commit()
     with con:
         with open("dump_script.sql", 'w',encoding='utf-8') as f:
             for line in con.iterdump():
                 f.write('%s\n' % line)
     con.close()
+
 
 
 

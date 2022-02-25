@@ -11,7 +11,7 @@ def openFrame(frame):
 class grouproom:
     def __init__(self,groupName):
         self.window = Tk()
-        self.groupName = groupName  #여기다가 모임 이름 넣으면 좋을 듯
+        self.groupName = groupName  
         self.window.title(self.groupName)  
         self.window.geometry("640x480")
         self.window.resizable(False,False)
