@@ -1,5 +1,7 @@
 BEGIN TRANSACTION;
 CREATE TABLE Participation(groupId INTEGER, userId char(15), PRIMARY KEY(groupId, userId));
+CREATE TABLE Participation(groupId INTEGER, userId char(15), PRIMARY KEY(groupId, userId), FOREIGN KEY(groupId) REFERENCES UserGroup(groupId) ON DELETE CASCADE);
+
 INSERT INTO "Participation" VALUES(10,'id3');
 INSERT INTO "Participation" VALUES(11,'id3');
 INSERT INTO "Participation" VALUES(12,'id3');
