@@ -101,3 +101,5 @@ class changepw:
                 f.write(pw_line)
             msgbox.showinfo("알림","비밀번호가 정상적으로 변경되었습니다.")
             self.newin.destroy()
+        else:
+            self.newin.tkraise()

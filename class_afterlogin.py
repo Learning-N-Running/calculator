@@ -1,5 +1,6 @@
 from tkinter import *
 import tkinter.messagebox as msgbox
+import tkinter.ttk as ttk
 from tkinter.ttk import Labelframe
 from tkinter.font import *
 
@@ -10,6 +11,7 @@ from UserInfoDB import find_username_email,find_user_group
 from watch_my_info import *
 from change_pw import *
 from group_room import *
+import group_room as g_r
 
 
 def openFrame(frame):
@@ -22,7 +24,7 @@ class make_group_class():
 
     def group_button_func(self,parent):
         parent.window.destroy()
-        self.gr_win = grouproom(str(self.user_group))
+        self.gr_win = g_r.grouproom(str(self.user_group))
         self.gr_win.window.mainloop()
 
 
@@ -145,7 +147,7 @@ class after_log:  #after_login.py를 클래스화 한 것
 
         self.window.destroy()
         ##여기 아래 두줄은 클래스로 고쳐주자.
-        globals()['{}_gr'.format(str(self.group_name))] = grouproom(str(self.group_name))
+        globals()['{}_gr'.format(str(self.group_name))] = g_r.grouproom(str(self.group_name))
         globals()['{}_gr'.format(str(self.group_name))].window.mainloop()
 
     
@@ -184,19 +186,10 @@ class after_log:  #after_login.py를 클래스화 한 것
 
         Button(self.add_menu, padx=30, pady=10, text="확인", command=lambda:[self.insert_and_check_group(self.groupName.get(), self.groupPw.get())]).grid(row=4, column=0)
         Button(self.add_menu, padx=30, pady=10, text="취소", command=self.add_menu.destroy).grid(row=4, column=1)
-        # Button(add_menu, padx=30, pady=5, text="확인", command=add_group_complete).grid(row=5, column=0)
-        # Button(add_menu, padx=30, pady=5, text="취소").grid(row=5, column=1)
-
-        # add_menu.bind("<Keys>", checkPassword)
 
     def SearchGroup(self):
         print("그룹을 찾습니다")
 
-    # def insertGroupIntoList(self):
-    #     self.group_name = getGroupInfo()[-1][0]
-    #     self.line = Button(group_list_scrollable_frame,text=group_name,width=53,height= 6,font=font2)
-    #     globals()['group_{}_button'.format(group_name)] = line
-    #     globals()['group_{}_button'.format(group_name)].pack()
 
 
 
@@ -204,11 +197,6 @@ class after_log:  #after_login.py를 클래스화 한 것
 
 
 
-
-
-# window.config(menu=menu)
-# window.mainloop()
-
-k = after_log()
-
-k.window.mainloop()
+if __name__=="__main__":
+    k = after_log()
+    k.window.mainloop()

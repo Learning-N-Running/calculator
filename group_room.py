@@ -3,6 +3,7 @@ from tkinter import *
 from tkinter.font import *
 import tkinter.messagebox as msgbox
 from tkinter import ttk
+from class_afterlogin import *
 
 def openFrame(frame):
     frame.tkraise()
@@ -121,7 +122,8 @@ class grouproom:
         #새로 추가한 것
     def go_back_func(self):
         self.window.destroy()
-        import AfterLogIn
+        self.cal = after_log()
+        self.cal.window.mainloop()
 
 
 
