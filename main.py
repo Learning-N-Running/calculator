@@ -167,8 +167,6 @@ def new_confirm_id_dup():
     elif response==userId:
         msgbox.showinfo("아이디 사용 가능","사용 가능한 ID입니다.")
         id_dup_switch = 'usable'
-
-
             
 
 window = tk.Tk()

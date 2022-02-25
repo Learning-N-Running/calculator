@@ -22,6 +22,7 @@ menu = Menu(window)
 #함수 정리
 def openFrame(frame):
     frame.tkraise()
+    
 
 def CheckMyInfo():
     print("내 정보를 확인합니다.")
@@ -36,10 +37,8 @@ def ChangePW():
 def insert_and_check_group(gName, gPW):
     try:
         insertData(gName, gPW)
-        # add_menu.destroy()
         insertGroupIntoList()
         add_group_complete()
-        # insertParticipation()
 
     except IntegrityError:
         msgbox.showerror(title="error", message="중복되는 ID 입니다.")
@@ -68,8 +67,6 @@ def add_group_complete(): #모임 추가화면에서 확인 눌렀을 때
     gr = grouproom(str(group_name))
 
     gr.window.mainloop()
-
-
 
     
 def addGroup():
@@ -151,9 +148,6 @@ group_scrollbar.pack(side='right',fill='y')
 group_list = Listbox(frame_group,selectmode='single', yscrollcommand=group_scrollbar.set)
 #height값을 줘야할지 말아야할지 고민
 group_list.pack(side='left', fill='both',expand=True)
-
-btn_enter = Button(window, text="입장")
-btn_enter.pack()
 
 for i in getGroupInfo():
     group_list.insert(END, i)
