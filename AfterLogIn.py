@@ -26,6 +26,7 @@ font2=Font(family="맑은 고딕", size=15)
 #함수 정리
 def openFrame(frame):
     frame.tkraise()
+    
 
 def CheckMyInfo():
     print("내 정보를 확인합니다.")
@@ -44,16 +45,20 @@ def insert_and_check_group(gName, gPW):
         msgbox.showinfo('부적절한 그룹 이름','그룹 이름을 다시 입력해주세요.')
         add_menu.tkraise()
     else:
-        try:
-            insertData(gName, gPW)
-            # add_menu.destroy()
-            insertGroupIntoList()
-            add_group_complete()
-            # insertParticipation()
-
-        except IntegrityError:
-            msgbox.showerror(title="error", message="중복되는 ID 입니다.")
+        if gPW in blank_list:
+            msgbox.showinfo('부적절한 비밀번호','비밀번호를 다시 입력해주세요.')
             add_menu.tkraise()
+        else:
+            try:
+                insertData(gName, gPW)
+                # add_menu.destroy()
+                insertGroupIntoList()
+                add_group_complete()
+                # insertParticipation()
+
+            except IntegrityError:
+                msgbox.showerror(title="error", message="중복되는 ID 입니다.")
+                add_menu.tkraise()
 
 
 def callback(*args):
@@ -69,8 +74,7 @@ def callback(*args):
         else:
             lb_var.set("다시 입력하세요.")
     
-def add_group_complete(): #모임 추가화면에서 확인 눌렀을 때
-    # insertData(groupName.get(), groupSite.get(), groupPw.get()) #여기서 그룹번호를 return하게 만들기
+def add_group_complete(): #모임 추가화면에서 확인 눌렀을 때 마지막으로 실행되는 함수
     msgbox.showinfo("그룹 추가","그룹이 정상적으로 추가되었습니다.")
     group_name = groupName.get()
 
@@ -79,8 +83,6 @@ def add_group_complete(): #모임 추가화면에서 확인 눌렀을 때
 
     globals()['{}_gr'.format(str(group_name))] = grouproom(str(group_name))
     globals()['{}_gr'.format(str(group_name))].window.mainloop()
-
-
 
     
 def addGroup():
@@ -111,6 +113,7 @@ def addGroup():
     groupPw_check.grid(row=2, column=1)
 
     pw_check_var.trace('w', callback)
+    pw_var.trace('w',callback)
 
     check_label = Label(add_menu, pady=10, textvariable=lb_var, fg="red", justify=LEFT)
     check_label.grid(row=3, columnspan=2)

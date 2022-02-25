@@ -1,4 +1,5 @@
 from ast import expr_context
+import encodings
 from tkinter import messagebox
 import sqlite3
 import os
@@ -101,8 +102,6 @@ def login_check(real_userId): #아이디 비번 대조하는 것
         con.close()
         ready_login_check=True
 
-        global user_id
-        user_id = real_userId
         return login_password,ready_login_check
     except TypeError:
         # print("입력하신 ID는 없습니다.")
@@ -114,8 +113,11 @@ def insertData(groupName, groupPw):
     con = sqlite3.connect("temp.db")
     cur = con.cursor()
     cur.execute("select count(*) from UserGroup")
-    global groupId
     groupId = cur.fetchone()[0] + 1
+
+    with open("login_info.txt", "a", encoding="utf-8") as f:
+        f.write("{}\n".format(groupId))
+        f.close()
 
     cur.execute("insert into UserGroup VALUES(?, ?, ?)", (groupId, groupName, groupPw))
 
@@ -131,11 +133,16 @@ def insertData(groupName, groupPw):
 def getGroupInfo():
     con = sqlite3.connect("temp.db")
     cur = con.cursor()
-    cur.execute('SELECT GroupName FROM UserGroup G, UserTable U, Participation P WHERE G.groupId=P.groupId and U.id="{}"'.format(user_id))
+    with open("login_info.txt", "r", encoding="utf-8") as f:
+        lines = f.readlines()    
+        user_id = lines[0][4:].rstrip(' \n')
+        print(user_id)
+        f.close()
+
+    cur.execute('select groupName from UserGroup G where g.groupId IN(select p.groupId from Participation p where p.userId="{}")'.format(user_id))
     gName = cur.fetchall()
     
     return gName
-
 
 
 def find_username_email(login_id):
@@ -164,6 +171,13 @@ def change_pw(present_pw,new_pw):
 def insertParticipation():
     con = sqlite3.connect("temp.db")
     cur = con.cursor()
+
+    with open("login_info.txt", "r", encoding="utf-8") as f:
+        lines = f.readlines()    
+        user_id = lines[0][4:].rstrip(" \n") 
+        groupId = lines[-1]
+        f.close()
+    
     cur.execute("insert into Participation VALUES(?, ?)", (groupId, user_id))
     con.commit()
     con.close()
