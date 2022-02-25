@@ -6,7 +6,7 @@ from tkinter.font import *
 from sqlite3 import IntegrityError
 
 from UserInfoDB import getGroupInfo, insertData, init_db_when_start, insertParticipation
-from UserInfoDB import find_username_email
+from UserInfoDB import find_username_email,find_user_group
 from watch_my_info import *
 from change_pw import *
 from group_room import *
@@ -18,6 +18,8 @@ window.geometry("640x480")
 
 menu = Menu(window)
 
+user_group_list = find_user_group()
+print(user_group_list)
 
 #기본 설정
 font1=Font(family="맑은 고딕", size=30)
