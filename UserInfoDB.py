@@ -7,7 +7,12 @@ from mysqlx import DatabaseError, IntegrityError
 
 #지우면 안됨.
 # cur.execute('CREATE TABLE UserTable(id char(15), UserName char(5), email char(25), password char(15))')
-# CREATE TABLE UserGroup(groupId INTEGER PRIMARY KEY, groupName TEXT, groupSite CHAR(25), groupPw VARCHAR(15));
+con = sqlite3.connect("temp.db")
+cur = con.cursor()
+cur.execute('CREATE TABLE IF NOT EXISTS UserGroup(groupId INTEGER PRIMARY KEY, groupName VARCHAR(30) unique, groupPw VARCHAR(15));')
+cur.execute('CREATE TABLE IF NOT EXISTS Participation(groupId INTEGER, userId char(15), PRIMARY KEY(groupId, userId));')
+con.commit()
+con.close()
 
 #db 초기화
 def init_db_when_start():
@@ -92,7 +97,7 @@ def login_check(real_userId): #아이디 비번 대조하는 것
     try:
         sen = 'Select password From UserTable WHERE id="{}"'.format(real_userId)
         cur.execute(sen)
-        login_password = ''.join(cur.fetchone())
+        login_password = ''.join(cur.fetchone())   ##문제 발생 가능 지점
         # print("입력하신 ID가 있군요!") #최종적으로는 지우자.
         con.close()
         ready_login_check=True
@@ -131,6 +136,8 @@ def getGroupInfo():
     gName = cur.fetchall()
     
     return gName
+
+
 
 def find_username_email(login_id):
     con = sqlite3.connect("temp.db")

@@ -30,7 +30,7 @@ class changepw:
         Label(self.newin, text = "    ").grid(row = 1, column = 0, padx = 5, pady = 10)
 
         Label(self.newin, text = "현재 비밀번호").grid(row = 1, column = 1, padx = 5, pady = 10)
-        self.present_pw_entry =Entry(self.newin, textvariable=self.recent_pw_var).grid(row = 1, column = 2, pady = 10)
+        self.present_pw_entry =Entry(self.newin, textvariable=self.recent_pw_var,show='*').grid(row = 1, column = 2, pady = 10)
         self.check_present_pw_label = Label(self.newin, textvariable=self.recent_pw_status_var).grid(row = 1, column = 3, pady = 10)
 
         with open('login_info.txt','r') as f:

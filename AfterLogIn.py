@@ -9,6 +9,7 @@ from UserInfoDB import getGroupInfo, insertData, init_db_when_start, insertParti
 from UserInfoDB import find_username_email
 from watch_my_info import *
 from change_pw import *
+from group_room import *
 
 
 window = Tk()
@@ -35,12 +36,14 @@ def ChangePW():
 def insert_and_check_group(gName, gPW):
     try:
         insertData(gName, gPW)
-        add_menu.destroy()
+        # add_menu.destroy()
         insertGroupIntoList()
+        add_group_complete()
         # insertParticipation()
 
     except IntegrityError:
         msgbox.showerror(title="error", message="중복되는 ID 입니다.")
+        add_menu.tkraise()
 
 
 def callback(*args):
@@ -54,16 +57,28 @@ def callback(*args):
         if a==b:
             lb_var.set("비밀번호가 일치합니다.")
         else:
-            lb_var.set("비밀번호를 다시 입력하세요.")
+            lb_var.set("다시 입력하세요.")
+    
+def add_group_complete(): #모임 추가화면에서 확인 눌렀을 때
+    # insertData(groupName.get(), groupSite.get(), groupPw.get()) #여기서 그룹번호를 return하게 만들기
+    msgbox.showinfo("그룹 추가","그룹이 정상적으로 추가되었습니다.")
+    group_name = groupName.get()
+
+    window.destroy()
+    gr = grouproom(str(group_name))
+
+    gr.window.mainloop()
+
+
 
     
 def addGroup():
-    global add_menu
+    global add_menu,groupName,groupSite,groupPw
     add_menu = Toplevel(window)
-    add_menu.geometry("400x380")
-    add_menu.title("모임을 추가합니다.")
+    add_menu.geometry("400x400")
+    add_menu.title("그룹을 추가합니다.")
     
-    Label(add_menu, padx=40, pady=30, text="모임 이름").grid()
+    Label(add_menu, padx=40, pady=20, text="그룹 이름").grid()
     groupName = Entry(add_menu)
     groupName.grid(row=0, column=1)
 
@@ -91,6 +106,10 @@ def addGroup():
 
     Button(add_menu, padx=30, pady=10, text="확인", command=lambda:[insert_and_check_group(groupName.get(), groupPw.get())]).grid(row=4, column=0)
     Button(add_menu, padx=30, pady=10, text="취소", command=add_menu.destroy).grid(row=4, column=1)
+    # Button(add_menu, padx=30, pady=5, text="확인", command=add_group_complete).grid(row=5, column=0)
+    # Button(add_menu, padx=30, pady=5, text="취소").grid(row=5, column=1)
+
+    # add_menu.bind("<Keys>", checkPassword)
 
     
 def addList(frame):
@@ -105,7 +124,6 @@ def SearchGroup():
 def insertGroupIntoList():
     group_list.insert(END, getGroupInfo()[-1])
 
-init_db_when_start()
 
 #메뉴 
 menu_info = Menu(menu,tearoff=0)
