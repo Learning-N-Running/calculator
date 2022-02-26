@@ -138,10 +138,6 @@ def SearchGroup():
     print("그룹을 찾습니다")
     win_sg = Toplevel(window)
     sg = searchgroup(win_sg)
-    try:
-        print(sg.status)
-    except:
-        pass
     
 def insertGroupIntoList():
     group_name = getGroupInfo()[-1][0]

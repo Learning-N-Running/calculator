@@ -11,7 +11,6 @@ from UserInfoDB import get_all_groups,find_user_group,join_group
 def join_group_button_func(search_group_class,parent):
     join_group(search_group_class.sear_result)
     parent.newin.destroy()
-    parent.status = '안녕히계세요 여러분~~~'
 
 
 

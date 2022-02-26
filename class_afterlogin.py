@@ -192,10 +192,6 @@ class after_log:  #after_login.py를 클래스화 한 것
         print("그룹을 찾습니다")
         self.win_sg = Toplevel(self.window)
         self.sg = searchgroup(self.win_sg)
-        try:
-            print(self.sg.status)
-        except:
-            pass
 
 
 
