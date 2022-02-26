@@ -64,7 +64,7 @@ class searchgroup:
 
 
         self.fifth_space_frame = Frame(self.newin)
-        self.fifth_space_frame.pack(fill='both',side='top',expand=True)
+        self.fifth_space_frame.pack(fill='both',side='top',expand=True,pady=5)
             # 찾은 그룹들 버튼이 나타나는 scrollable
         self.search_group_container = Frame(self.fifth_space_frame,bd=1,relief='solid')
         self.search_group_container.pack(side='left',fill='both',expand=True)
@@ -90,18 +90,54 @@ class searchgroup:
         # for i in ['A','B','C']:
         #     # Button(self.search_group_scrollable_frame, text="Sample scrolling button{}".format(i),width=44,height= 1,font=self.font2).pack()
         #     globals()['self.{}_search_group_class'.format(i)] = make_search_group_class(self,i)
+        
+        for i in self.all_group_list:
+            # Button(self.search_group_scrollable_frame, text="Sample scrolling button{}".format(i),width=44,height= 1,font=self.font2).pack()
+            globals()['self.{}_search_group_class'.format(i)] = make_search_group_class(self,i)
+
 
     def callback(self,*args):
+        try:
+            self.search_group_scrollable_frame.destroy()
+            self.search_group_scrollable_frame = ttk.Frame(self.search_group_canvas)
+            self.search_group_scrollable_frame.bind(
+                "<Configure>",
+                lambda e: self.search_group_canvas.configure(
+                    scrollregion= self.search_group_canvas.bbox("all")
+                )
+            )
+
+            self.search_group_canvas.create_window((0,0),window=self.search_group_scrollable_frame,anchor='nw')
+            self.search_group_canvas.configure(yscrollcommand=self.search_group_scrollbar.set)
+        except:
+            pass
+        
+        #검색 조건
         searstng = self.search_var.get()
-        n = len(searstng)
         sear_result_list = []
+
+        # #'A B'라는 이름의 그룹을 검색하려 할 때 'AB'를 입력하면 검색이 안되는 경우.
+        # n = len(searstng)
+        # for group in self.all_group_list:
+        #     k = len(group)
+        #     if k>=n:
+        #         for i in range(k-n+1):
+        #             if group[i:i+n]==searstng:
+        #                 sear_result_list.append(group)
+        #                 break
+
+        #'A B'라는 이름의 그룹을 검색하려 할 때 'AB'or 'A  B'를 입력해도 검색이 되는 경우. 중간중간 공백이 있어도 출력이 됨.
+        s = searstng.replace(" ",'')
+        p = len(s)
         for group in self.all_group_list:
-            k = len(group)
-            if k>=n:
-                for i in range(k-n+1):
-                    if group[i:i+n]==searstng:
+            t = group.replace(" ",'')
+            j = len(t)
+            if j>=p:
+                for i in range(j-p+1):
+                    if t[i:i+p]==s:
                         sear_result_list.append(group)
                         break
+        
         for sear_result in sear_result_list:
             globals()['self.{}_search_group_class'.format(sear_result)] = make_search_group_class(self,sear_result)
 
