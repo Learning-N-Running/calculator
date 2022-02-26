@@ -1,3 +1,2 @@
 id: tina_id 
 pw: tina_pw 
-6

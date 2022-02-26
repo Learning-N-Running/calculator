@@ -5,17 +5,21 @@ import tkinter.messagebox as msgbox
 import tkinter.ttk as ttk
 from tkinter.ttk import Labelframe
 from tkinter.font import *
-from UserInfoDB import get_all_groups,find_user_group
+from UserInfoDB import get_all_groups,find_user_group,join_group
 
 
-    
+def join_group_button_func(search_group_class,parent):
+    # global should_update_afterlogin
+    join_group(search_group_class.sear_result)
+    parent.newin.destroy()
+    # should_update_afterlogin = True
 
 
 class make_search_group_class():
     def __init__(self,parent,sear_result):
         self.sear_result = sear_result
         # self.sear_result_button = Button(parent.search_group_scrollable_frame, text=self.sear_result,width=8,height= 3,command=lambda:[self.group_member_button_func(parent)]).pack()
-        self.sear_result_button = Button(parent.search_group_scrollable_frame, text=self.sear_result,width=44,height= 1,font=parent.font2,command=lambda:[self.sear_result_button_func(parent)]).pack()
+        self.sear_result_button = Button(parent.search_group_scrollable_frame, text=self.sear_result,width=44,height= 1,font=parent.font2,command=lambda:[join_group_button_func(self,parent)]).pack()
 
     def sear_result_button_func(self,parent):
         if self.sear_result in parent.user_group_list:
@@ -27,13 +31,19 @@ class make_search_group_class():
             self.win = Toplevel(parent.newin)
             self.win.title("{} 가입".format(self.sear_result))
             self.win.geometry('400x400')
-
+            self.join_group_button = Button(self.win,text='가입',font=parent.font2,command=lambda:[join_group_button_func(parent)]).pack()
+    
+    # def join_group_button_func(self,parent):
+    #     join_group(self.sear_result)
+    #     self.win.destroy()
+    #     parent.newin.tkraise()
 
 
 
 
 class searchgroup:
     def __init__(self,newin):
+        # global should_update_afterlogin
         self.newin = newin
         self.newin.title("그룹 찾기")
         self.newin.geometry("640x480")
@@ -41,6 +51,7 @@ class searchgroup:
 
         self.all_group_list= get_all_groups()
         self.user_group_list = find_user_group()
+        # should_update_afterlogin= False
         
         self.font1=Font(family="맑은 고딕", size=30)
         self.font2=Font(family="맑은 고딕", size=15)

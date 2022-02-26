@@ -21,7 +21,7 @@ def init_db_when_start():
     cur.execute('CREATE TABLE IF NOT EXISTS Participation(groupId INTEGER, userId char(15), PRIMARY KEY(groupId, userId));')
 
     if os.path.isfile('dump_script.sql'):
-        f = open('dump_script.sql','r')
+        f = open('dump_script.sql','r',encoding='utf-8')
         datas = f.readlines()
         for data in datas:
             if data.startswith('INSERT INTO'):
@@ -115,20 +115,20 @@ def insertData(groupName, groupPw):
     cur.execute("select count(*) from UserGroup")
     groupId = cur.fetchone()[0] + 1
 
-    with open("login_info.txt", "a", encoding="utf-8") as f:
-        f.write("{}\n".format(groupId))
-        f.close()
+    # with open("login_info.txt", "a", encoding="utf-8") as f:
+    #     f.write("{}\n".format(groupId))
+    #     f.close()
 
     cur.execute("insert into UserGroup VALUES(?, ?, ?)", (groupId, groupName, groupPw))
-
     con.commit()
-    insertParticipation()
+    # insertParticipation()
     with con:
         with open("dump_script.sql", 'w',encoding='utf-8') as f:
             for line in con.iterdump():
                 f.write('%s\n' % line)
 
     con.close()
+    insertParticipation(groupId)
 
 def getGroupInfo():
     con = sqlite3.connect("temp.db")
@@ -170,18 +170,22 @@ def change_pw(present_pw,new_pw):
                 f.write('%s\n' % line)
     con.close()
 
-def insertParticipation():
+def insertParticipation(groupId):
     con = sqlite3.connect("temp.db")
     cur = con.cursor()
 
     with open("login_info.txt", "r", encoding="utf-8") as f:
         lines = f.readlines()    
         user_id = lines[0][4:].rstrip(" \n") 
-        groupId = lines[-1]
-        f.close()
+        # groupId = lines[-1]
+        # f.close()
     
     cur.execute("insert into Participation VALUES(?, ?)", (groupId, user_id))
     con.commit()
+    with con:
+        with open("dump_script.sql", 'w',encoding='utf-8') as f:
+            for line in con.iterdump():
+                f.write('%s\n' % line)
     con.close()
 
 def find_user_group():  #로그인한 유저가 속해있는 그룹들을 리스트로 return해주는 함수
@@ -234,6 +238,17 @@ def get_all_groups(): #모든 그룹들을 리스트로 반환해주는 함수
         all_group_list.append(i[0])
     con.close()
     return all_group_list
+
+def join_group(groupName):  #그룹찾기에서 그룹 가입할 때 실행되는 함수
+    con = sqlite3.connect("temp.db")
+    cur = con.cursor()
+    sen = 'Select groupId From UserGroup WHERE groupName="{}"'.format(groupName)
+    cur.execute(sen)
+    group_id = cur.fetchone()[0]
+    con.close()
+    insertParticipation(group_id)
+    print("{}에 가입되었습니다.".format(groupName))
+
 
 
 
