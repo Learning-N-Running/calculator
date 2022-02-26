@@ -5,7 +5,11 @@ import tkinter.messagebox as msgbox
 import tkinter.ttk as ttk
 from tkinter.ttk import Labelframe
 from tkinter.font import *
-from UserInfoDB import get_all_groups
+from UserInfoDB import get_all_groups,find_user_group
+
+
+    
+
 
 class make_search_group_class():
     def __init__(self,parent,sear_result):
@@ -14,8 +18,17 @@ class make_search_group_class():
         self.sear_result_button = Button(parent.search_group_scrollable_frame, text=self.sear_result,width=44,height= 1,font=parent.font2,command=lambda:[self.sear_result_button_func(parent)]).pack()
 
     def sear_result_button_func(self,parent):
-        print(self.sear_result)
-        #아래에 더 구현해보기
+        if self.sear_result in parent.user_group_list:
+            msgbox.showinfo('이미 속한 그룹',"이미 속해있는 그룹입니다.")
+            print("이미 속해있는 그룹입니다.")
+            parent.newin.tkraise()
+        else:
+            print(self.sear_result)
+            self.win = Toplevel(parent.newin)
+            self.win.title("{} 가입".format(self.sear_result))
+            self.win.geometry('400x400')
+
+
 
 
 
@@ -27,7 +40,8 @@ class searchgroup:
         self.newin.resizable(False,False)
 
         self.all_group_list= get_all_groups()
-
+        self.user_group_list = find_user_group()
+        
         self.font1=Font(family="맑은 고딕", size=30)
         self.font2=Font(family="맑은 고딕", size=15)
 
