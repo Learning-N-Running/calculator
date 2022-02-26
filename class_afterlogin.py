@@ -12,6 +12,7 @@ from watch_my_info import *
 from change_pw import *
 from group_room import *
 import group_room as g_r
+from search_group import *
 
 
 def openFrame(frame):
@@ -189,6 +190,8 @@ class after_log:  #after_login.py를 클래스화 한 것
 
     def SearchGroup(self):
         print("그룹을 찾습니다")
+        self.win_sg = Toplevel(self.window)
+        self.sg = searchgroup(self.win_sg)
 
 
 

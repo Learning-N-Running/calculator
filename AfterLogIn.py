@@ -10,6 +10,7 @@ from UserInfoDB import find_username_email,find_user_group
 from watch_my_info import *
 from change_pw import *
 from group_room import *
+from search_group import *
 
 
 window = Tk()
@@ -135,6 +136,8 @@ def addGroup():
 
 def SearchGroup():
     print("그룹을 찾습니다")
+    win_sg = Toplevel(window)
+    sg = searchgroup(win_sg)
 
 def insertGroupIntoList():
     group_name = getGroupInfo()[-1][0]
