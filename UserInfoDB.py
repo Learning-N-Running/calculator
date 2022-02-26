@@ -142,6 +142,7 @@ def getGroupInfo():
     cur.execute('select groupName from UserGroup G where g.groupId IN(select p.groupId from Participation p where p.userId="{}")'.format(user_id))
     gName = cur.fetchall()
     
+    con.close()
     return gName
 
 
@@ -154,6 +155,7 @@ def find_username_email(login_id):
     sen = 'Select email From UserTable WHERE id="{}"'.format(login_id)
     cur.execute(sen)
     email_for_watchmyinfo = ''.join(cur.fetchone())
+    con.close()
     return username_for_watchmyinfo,email_for_watchmyinfo
 
 def change_pw(present_pw,new_pw):
@@ -218,7 +220,20 @@ def find_group_members(groupName): #그룹의 멤버들을 리스트로 반환�
     for group_member in group_members:
         gm = group_member[0]
         group_member_list.append(gm)
+    con.close()
     return group_member_list
+
+def get_all_groups(): #모든 그룹들을 리스트로 반환해주는 함수
+    con = sqlite3.connect("temp.db")
+    cur = con.cursor()
+    sen = 'Select groupName From UserGroup'
+    cur.execute(sen)
+    all_groups_bfedit = cur.fetchall()
+    all_group_list = []
+    for i in all_groups_bfedit:
+        all_group_list.append(i[0])
+    con.close()
+    return all_group_list
 
 
 
