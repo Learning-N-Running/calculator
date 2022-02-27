@@ -47,11 +47,11 @@ class grouproom:
             #모임 참여자 scrollable frame
         self.group_member_container = Frame(self.group_member_frame,width=320,height=40)
         self.group_member_container.pack(side='left',fill='both', expand=True,padx=5)
-        self.group_member_container.configure(bg='red')
+        # self.group_member_container.configure(bg='red')
 
         self.group_member_canvas = Canvas(self.group_member_container,width=320,height=40)
         self.group_member_canvas.pack(side='top',fill='both',expand=True)
-        self.group_member_canvas.configure(bg='green')
+        # self.group_member_canvas.configure(bg='green')
 
 
         self.group_member_scrollbar = ttk.Scrollbar(self.group_member_container,orient="horizontal",command=self.group_member_canvas.xview)
@@ -69,8 +69,8 @@ class grouproom:
 
         for i in range(10):
             line = Button(self.group_member_scrollable_frame, text="이름{}".format(i),width=8,height= 3)
-            globals()['self.button{}.format(i)'] = line
-            globals()['self.button{}.format(i)'].pack(side='left')
+            globals()['self.button{}'.format(i)] = line
+            globals()['self.button{}'.format(i)].pack(side='left')
         
             #그룹 멤버 추가, 삭제 버튼
         self.group_member_delete_button = Button(self.group_member_frame,text="삭제",font=self.font2,width=4)

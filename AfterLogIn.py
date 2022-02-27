@@ -19,6 +19,10 @@ window.geometry("640x480")
 menu = Menu(window)
 
 
+#기본 설정
+font1=Font(family="맑은 고딕", size=30)
+font2=Font(family="맑은 고딕", size=15)
+
 #함수 정리
 def openFrame(frame):
     frame.tkraise()
@@ -35,14 +39,26 @@ def ChangePW():
     cpw = changepw(win_cpw)
 
 def insert_and_check_group(gName, gPW):
-    try:
-        insertData(gName, gPW)
-        insertGroupIntoList()
-        add_group_complete()
-
-    except IntegrityError:
-        msgbox.showerror(title="error", message="중복되는 ID 입니다.")
+    blank_list = [' '*n for n in range(1,11)]
+    blank_list.append('')
+    if gName in blank_list:
+        msgbox.showinfo('부적절한 그룹 이름','그룹 이름을 다시 입력해주세요.')
         add_menu.tkraise()
+    else:
+        if gPW in blank_list:
+            msgbox.showinfo('부적절한 비밀번호','비밀번호를 다시 입력해주세요.')
+            add_menu.tkraise()
+        else:
+            try:
+                insertData(gName, gPW)
+                # add_menu.destroy()
+                insertGroupIntoList()
+                add_group_complete()
+                # insertParticipation()
+
+            except IntegrityError:
+                msgbox.showerror(title="error", message="중복되는 ID 입니다.")
+                add_menu.tkraise()
 
 def callback(*args):
     a = pw_var.get()
@@ -57,15 +73,15 @@ def callback(*args):
         else:
             lb_var.set("다시 입력하세요.")
     
-def add_group_complete(): #모임 추가화면에서 확인 눌렀을 때
-    # insertData(groupName.get(), groupSite.get(), groupPw.get()) #여기서 그룹번호를 return하게 만들기
+def add_group_complete(): #모임 추가화면에서 확인 눌렀을 때 마지막으로 실행되는 함수
     msgbox.showinfo("그룹 추가","그룹이 정상적으로 추가되었습니다.")
     group_name = groupName.get()
 
-    window.destroy()
-    gr = grouproom(str(group_name))
 
-    gr.window.mainloop()
+    window.destroy()
+
+    globals()['{}_gr'.format(str(group_name))] = grouproom(str(group_name))
+    globals()['{}_gr'.format(str(group_name))].window.mainloop()
 
     
 def addGroup():
@@ -96,6 +112,7 @@ def addGroup():
     groupPw_check.grid(row=2, column=1)
 
     pw_check_var.trace('w', callback)
+    pw_var.trace('w',callback)
 
     check_label = Label(add_menu, pady=10, textvariable=lb_var, fg="red", justify=LEFT)
     check_label.grid(row=3, columnspan=2)
@@ -118,8 +135,10 @@ def SearchGroup():
     print("그룹을 찾습니다")
 
 def insertGroupIntoList():
-    group_list.insert(END, getGroupInfo()[-1])
-
+    group_name = getGroupInfo()[-1][0]
+    line = Button(group_list_scrollable_frame,text=group_name,width=53,height= 6,font=font2)
+    globals()['group_{}_button'.format(group_name)] = line
+    globals()['group_{}_button'.format(group_name)].pack()
 
 #메뉴 
 menu_info = Menu(menu,tearoff=0)
@@ -137,21 +156,34 @@ btn_add_group.pack(side="left")
 btn_search_group=Button(frame_addsearch_group,padx=5,pady=5,width=12,text="그룹 찾기",command=SearchGroup)
 btn_search_group.pack(side="right")
 
+
 #그룹들 프레임
 frame_group = LabelFrame(window,text="내 그룹",relief="solid",bd=1)
 frame_group.pack(fill='both',expand=True,padx=10,pady=10)
 
-group_scrollbar = Scrollbar(frame_group)
-group_scrollbar.pack(side='right',fill='y')
 
-group_list = Listbox(frame_group,selectmode='single', yscrollcommand=group_scrollbar.set)
-#height값을 줘야할지 말아야할지 고민
-group_list.pack(side='left', fill='both',expand=True)
+group_list_container = ttk.Frame(frame_group)
+group_list_container.pack(side='left',fill='both',expand=True)
 
-for i in getGroupInfo():
-    group_list.insert(END, i)
+group_list_canvas = Canvas(group_list_container) 
+group_list_canvas.pack(side='left',fill='both',expand=True)
 
-group_scrollbar.config(command=group_list.yview)
+
+group_list_scrollbar = ttk.Scrollbar(group_list_container,orient="vertical",command=group_list_canvas.yview)
+group_list_scrollbar.pack(side='right',fill='y')
+group_list_scrollable_frame = ttk.Frame(group_list_canvas)
+
+group_list_scrollable_frame.bind(
+    "<Configure>",
+    lambda e: group_list_canvas.configure(
+        scrollregion= group_list_canvas.bbox("all")
+    )
+)
+group_list_canvas.create_window((0,0),window=group_list_scrollable_frame,anchor='nw')
+group_list_canvas.configure(yscrollcommand=group_list_scrollbar.set)
+
+# for i in range(10):
+#     Button(group_list_scrollable_frame, text="Sample Group button{}".format(i),width=53,height= 6,font=font2).pack()
 
 
 
