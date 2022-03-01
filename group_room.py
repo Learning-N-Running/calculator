@@ -7,7 +7,7 @@ from tkinter.font import *
 import tkinter.messagebox as msgbox
 from tkinter import ttk
 from class_afterlogin import *
-from UserInfoDB import find_group_members, getEventInfo, updateEvent, getGroupId
+from UserInfoDB import find_group_members, getEventInfo, updateEvent, getGroupId,find_events
 import detailInfoF as detailF
 
 def openFrame(frame):
@@ -146,8 +146,6 @@ class grouproom:
 
         self.insertEventIntoList()
         # for i in range(10,0,-1):
-        #     Button(self.add_event_scrollable_frame, text="Sample scrolling button{}".format(i),width=80,height= 7).pack()
-        # for i in range(10,0,-1):
         #     Button(self.add_event_scrollable_frame, text="이벤트 {}".format(i),font=self.font2,width=47,height= 2).pack()
         
 
@@ -176,14 +174,19 @@ class grouproom:
         groupId = getGroupId(self.groupName)
         updateEvent(groupId, eventName)
         self.insertEventIntoList()
-        detailF.SampleApp()
+        detailF.SampleApp(1)
         self.add_event.destroy()
 
-    
-    def insertEventIntoList(self):
+
+    def insertEventIntoList(self, i = 0):
         event_list = getEventInfo()
-        for i in event_list:
-            Button(self.add_event_scrollable_frame, text="{}".format(i[0]),width=80,height= 7, command=detailF.SampleApp).pack()
+        if i == 0:
+            for i in event_list:
+                Button(self.add_event_scrollable_frame, text="{}".format(i[0]),width=80,height= 7, command=detailF.SampleApp).pack()
+        else:
+            Button(self.add_event_scrollable_frame, text="{}".format(event_list[-1][0]),width=80,height= 7, command=detailF.SampleApp).pack()
+
+
 
 
 
