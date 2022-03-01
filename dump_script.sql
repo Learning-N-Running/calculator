@@ -31,18 +31,7 @@ INSERT INTO "Participation" VALUES(2,'id2');
 INSERT INTO "Participation" VALUES(3,'id3');
 INSERT INTO "Participation" VALUES(2,'id4');
 CREATE TABLE UserGroup(groupId INTEGER PRIMARY KEY, groupName VARCHAR(30) unique, groupPw VARCHAR(15));
-INSERT INTO "UserGroup" VALUES(1,'tina_first_group','1234');
-INSERT INTO "UserGroup" VALUES(2,'tina_second_group','1234');
-INSERT INTO "UserGroup" VALUES(3,'tina_third_group','1234');
-INSERT INTO "UserGroup" VALUES(4,'tina_fourth_group','1234');
-INSERT INTO "UserGroup" VALUES(5,'jh_first_group','1234');
-INSERT INTO "UserGroup" VALUES(6,'띄어 쓰기 그룹','1234');
-INSERT INTO "UserGroup" VALUES(7,'tina_fifth_group','1234');
-INSERT INTO "UserGroup" VALUES(8,'mk_first_group','1234');
 
-INSERT INTO "UserGroup" VALUES(1,'aa','1234', 'id1');
-INSERT INTO "UserGroup" VALUES(2,'bb','1234', 'id2');
-INSERT INTO "UserGroup" VALUES(3,'cc','1234', 'id3');
 
 
 CREATE TABLE UserTable(id char(15), UserName char(5), email char(25), password char(15));

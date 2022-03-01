@@ -121,7 +121,17 @@ def insertData(groupName, groupPw):
     #     f.write("{}\n".format(groupId))
     #     f.close()
 
-    cur.execute("insert into UserGroup VALUES(?, ?, ?)", (groupId, groupName, groupPw))
+    with open('login_info.txt','r',encoding='utf-8') as f:
+        datas= f.readlines()
+        for data in datas:
+            data.strip()
+            if data.startswith('id'):
+                login_id = data.split()[1]
+            elif data.startswith('pw'):
+                login_password = data.split()[1]
+                break
+
+    cur.execute("insert into UserGroup VALUES(?, ?, ?,?)", (groupId, groupName, groupPw,login_id))
     con.commit()
     # insertParticipation()
     with con:
@@ -181,6 +191,8 @@ def insertParticipation(groupId):
         user_id = lines[0][4:].rstrip(" \n") 
         # groupId = lines[-1]
         # f.close()
+
+
     
     cur.execute("insert into Participation VALUES(?, ?)", (groupId, user_id))
     con.commit()
