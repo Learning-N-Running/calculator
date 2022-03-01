@@ -16,9 +16,11 @@ def init_db_when_start():
     cur = con.cursor()
 
     # 테이블 추가할 때마다 여기에 넣어주기
-    cur.execute('CREATE TABLE IF NOT EXISTS UserTable(id char(15), UserName char(5), email char(25), password char(15))')
-    cur.execute('CREATE TABLE IF NOT EXISTS UserGroup(groupId INTEGER PRIMARY KEY, groupName VARCHAR(30) unique, groupPw VARCHAR(15));')
+    cur.execute('CREATE TABLE IF NOT EXISTS UserTable(id VARCHAR(30), UserName char(5), email char(25), password char(15))')
+    cur.execute('CREATE TABLE IF NOT EXISTS UserGroup(groupId INTEGER PRIMARY KEY, groupName VARCHAR(30) unique, groupPw VARCHAR(15), masterName VARCHAR(30));')
     cur.execute('CREATE TABLE IF NOT EXISTS Participation(groupId INTEGER, userId char(15), PRIMARY KEY(groupId, userId));')
+    cur.execute('CREATE TABLE IF NOT EXISTS Event(eventId INTEGER, eventName VARCHAR(30), groupId INTEGER, PRIMARY KEY(eventId));')
+
 
     if os.path.isfile('dump_script.sql'):
         f = open('dump_script.sql','r',encoding='utf-8')

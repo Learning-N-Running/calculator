@@ -1,16 +1,35 @@
 BEGIN TRANSACTION;
-CREATE TABLE Participation(groupId INTEGER, userId char(15), PRIMARY KEY(groupId, userId));
-INSERT INTO "Participation" VALUES(1,'tina_id');
-INSERT INTO "Participation" VALUES(2,'tina_id');
-INSERT INTO "Participation" VALUES(3,'tina_id');
-INSERT INTO "Participation" VALUES(4,'tina_id');
-INSERT INTO "Participation" VALUES(1,'gina_id');
-INSERT INTO "Participation" VALUES(5,'jh_id');
-INSERT INTO "Participation" VALUES(6,'tina_id');
-INSERT INTO "Participation" VALUES(7,'tina_id');
-INSERT INTO "Participation" VALUES(5,'tina_id');
-INSERT INTO "Participation" VALUES(8,'mk_id');
-INSERT INTO "Participation" VALUES(7,'mk_id');
+
+CREATE TABLE Participation
+( groupId INTEGER,
+  userId char(15),
+  PRIMARY KEY (groupId, userId),
+  CONSTRAINT fk_group
+    FOREIGN KEY (groupId)
+    REFERENCES UserGroup(groupId)
+    ON DELETE CASCADE
+);
+
+CREATE TABLE Event
+( eventId INTEGER,
+  eventName VARCHAR(30),
+  groupId char(15),
+  PRIMARY KEY (eventId),
+  CONSTRAINT fk_group
+    FOREIGN KEY (groupId)
+    REFERENCES UserGroup(groupId)
+    ON DELETE CASCADE
+);
+
+INSERT INTO "Event" VALUES(1,'e1', 1);
+INSERT INTO "Event" VALUES(2,'e2', 2);
+INSERT INTO "Event" VALUES(3,'e3', 2);
+INSERT INTO "Event" VALUES(4,'e4', 3);
+
+INSERT INTO "Participation" VALUES(1,'id1');
+INSERT INTO "Participation" VALUES(2,'id2');
+INSERT INTO "Participation" VALUES(3,'id3');
+INSERT INTO "Participation" VALUES(2,'id4');
 CREATE TABLE UserGroup(groupId INTEGER PRIMARY KEY, groupName VARCHAR(30) unique, groupPw VARCHAR(15));
 INSERT INTO "UserGroup" VALUES(1,'tina_first_group','1234');
 INSERT INTO "UserGroup" VALUES(2,'tina_second_group','1234');
@@ -20,6 +39,12 @@ INSERT INTO "UserGroup" VALUES(5,'jh_first_group','1234');
 INSERT INTO "UserGroup" VALUES(6,'띄어 쓰기 그룹','1234');
 INSERT INTO "UserGroup" VALUES(7,'tina_fifth_group','1234');
 INSERT INTO "UserGroup" VALUES(8,'mk_first_group','1234');
+
+INSERT INTO "UserGroup" VALUES(1,'aa','1234', 'id1');
+INSERT INTO "UserGroup" VALUES(2,'bb','1234', 'id2');
+INSERT INTO "UserGroup" VALUES(3,'cc','1234', 'id3');
+
+
 CREATE TABLE UserTable(id char(15), UserName char(5), email char(25), password char(15));
 INSERT INTO "UserTable" VALUES('tina_id','tina_name','seungeun020309@gmail.com','tina_pw');
 INSERT INTO "UserTable" VALUES('jh_id','jh_name','seungeun020309@gmail.com','jh_pw');

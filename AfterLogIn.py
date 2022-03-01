@@ -63,7 +63,6 @@ def insert_and_check_group(gName, gPW):
                 msgbox.showerror(title="error", message="중복되는 ID 입니다.")
                 add_menu.tkraise()
 
-
 def callback(*args):
     a = pw_var.get()
     b = pw_check_var.get()
