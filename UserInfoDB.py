@@ -264,6 +264,12 @@ def join_group(groupName):  #그룹찾기에서 그룹 가입할 때 실행되�
     print("{}에 가입되었습니다.".format(groupName))
 
 
+def getEventInfo(groupId):
+    con = sqlite3.connect("temp.db")
+    cur = con.cursor()
+    sen = 'select * from '
+    cur.execute(sen)
+    con.close()
 
 
 
