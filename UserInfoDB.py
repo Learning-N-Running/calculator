@@ -287,6 +287,15 @@ def find_events(groupName):  #어떤 그룹의 이벤트리스트를 반환해�
     con.close()
     return event_list
 
+def find_groupPw(groupName):
+    con = sqlite3.connect("temp.db")
+    cur = con.cursor()
+    sen = 'Select groupPw From UserGroup WHERE groupName="{}"'.format(groupName)
+    cur.execute(sen)
+    groupPw = cur.fetchone()
+    groupPw = groupPw[0]
+    con.close()
+    return groupPw
 
 # if __name__=='__main__':
 #     con = sqlite3.connect("temp.db")
@@ -310,4 +319,5 @@ def find_events(groupName):  #어떤 그룹의 이벤트리스트를 반환해�
 
 # print(find_group_members('tina_first_group'))
 # find_events('tina_first_group')
-find_events('bb')
+# find_events('bb')
+# find_groupPw('tina_first_group')

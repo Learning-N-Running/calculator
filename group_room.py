@@ -23,7 +23,7 @@ class make_group_member_class():
 class make_event_class:
     def __init__(self,parent,event):
         self.event = event
-        self.event_button = Button(parent.add_event_scrollable_frame, text=self.event,font=parent.font2,width=47,height= 2,command=lambda:[self.event_button_func(parent)]).pack()
+        self.event_button = Button(parent.add_event_scrollable_frame, text=self.event,font=parent.font2,width=47,height= 3,command=lambda:[self.event_button_func(parent)]).pack()
     
     def event_button_func(self,parent):
         print(self.event)
@@ -123,7 +123,7 @@ class grouproom:
 
             #이벤트 버튼 scrollable frame
         self.add_event_container = Frame(self.window,bd=1,relief='solid')
-        self.add_event_container.pack(side='left',fill='both',expand=True)
+        self.add_event_container.pack(side='left',fill='both',expand=True,pady=10)
 
         self.add_event_canvas = Canvas(self.add_event_container) 
         self.add_event_canvas.pack(side='left',fill='both',expand=True)

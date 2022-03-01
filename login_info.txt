@@ -1,2 +1,2 @@
-id: mk_id 
-pw: mk_pw 
+id: tina_id 
+pw: tina_pw 
