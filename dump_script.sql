@@ -30,12 +30,11 @@ INSERT INTO "Participation" VALUES(1,'id1');
 INSERT INTO "Participation" VALUES(2,'id2');
 INSERT INTO "Participation" VALUES(3,'id3');
 INSERT INTO "Participation" VALUES(2,'id4');
+
 CREATE TABLE IF NOT EXISTS UserGroup(groupId INTEGER PRIMARY KEY, groupName VARCHAR(30) unique, groupPw VARCHAR(15), masterName VARCHAR(30));
 
 
-INSERT INTO "UserGroup" VALUES(1,'aa','1234', 'id1');
-INSERT INTO "UserGroup" VALUES(2,'bb','1234', 'id2');
-INSERT INTO "UserGroup" VALUES(3,'cc','1234', 'id3');
+
 
 
 CREATE TABLE UserTable(id char(15), UserName char(5), email char(25), password char(15));
