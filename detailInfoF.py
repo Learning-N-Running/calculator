@@ -3,12 +3,18 @@ from tkinter import Toplevel, font as tkfont
 
 class SampleApp(tk.Tk):
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self,event,groupName, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
 
         self.title_font = tkfont.Font(family='Helvetica', size=18, weight="bold", slant="italic")
         
         self.geometry("640x480")
+
+        self.event = event
+        self.groupName = groupName
+
+        self.title('[{}] - [{}]'.format(self.groupName,self.event))
+
         container = tk.Frame(self)
         container.pack(side="top", fill="both", expand=True)
         container.grid_rowconfigure(0, weight=1)
@@ -116,5 +122,5 @@ class Amount(tk.Frame):
 
 
 if __name__ == "__main__":
-    app = SampleApp()
+    app = SampleApp('event','groupname')
     app.mainloop()

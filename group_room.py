@@ -27,7 +27,7 @@ class make_event_class:
         self.event_button = Button(parent.add_event_scrollable_frame, text=self.event,font=parent.font2,width=47,height= 3,command=lambda:[self.event_button_func(parent)]).pack()
     
     def event_button_func(self,parent):
-        print(self.event)
+        df = detailF.SampleApp(self.event,parent.groupName)
 
 
 
@@ -177,7 +177,7 @@ class grouproom:
         groupId = getGroupId(self.groupName)
         updateEvent(groupId, eventName)
         # self.insertEventIntoList()
-        detailF.SampleApp()
+        detailF.SampleApp(eventName,self.groupName)
         self.add_event.destroy()
 
     
