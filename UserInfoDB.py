@@ -5,14 +5,6 @@ import sqlite3
 import os
 
 
-#지우면 안됨.
-# cur.execute('CREATE TABLE UserTable(id char(15), UserName char(5), email char(25), password char(15))')
-con = sqlite3.connect("temp.db")
-cur = con.cursor()
-cur.execute('CREATE TABLE IF NOT EXISTS UserGroup(groupId INTEGER PRIMARY KEY, groupName VARCHAR(30) unique, groupPw VARCHAR(15));')
-cur.execute('CREATE TABLE IF NOT EXISTS Participation(groupId INTEGER, userId char(15), PRIMARY KEY(groupId, userId));')
-con.commit()
-con.close()
 
 #db 초기화
 def init_db_when_start():
@@ -22,19 +14,29 @@ def init_db_when_start():
         os.remove("temp.db")
     con = sqlite3.connect("temp.db")
     cur = con.cursor()
-    f = open('dump_script.sql','r')
-    datas = f.readlines()
-    for data in datas:
-        if data.startswith('INSERT INTO'):
-            cur.execute(data)
-        elif data.startswith('CREATE TABLE'):
-            cur.execute(data)
+
+    # 테이블 추가할 때마다 여기에 넣어주기
+    cur.execute('CREATE TABLE IF NOT EXISTS UserTable(id VARCHAR(30), UserName char(5), email char(25), password char(15))')
+    cur.execute('CREATE TABLE IF NOT EXISTS UserGroup(groupId INTEGER PRIMARY KEY, groupName VARCHAR(30) unique, groupPw VARCHAR(15), masterName VARCHAR(30));')
+    cur.execute('CREATE TABLE IF NOT EXISTS Participation(groupId INTEGER, userId char(15), PRIMARY KEY(groupId, userId));')
+    cur.execute('CREATE TABLE IF NOT EXISTS Event(eventId INTEGER, eventName VARCHAR(30), groupId INTEGER, PRIMARY KEY(eventId));')
+
+
+    if os.path.isfile('dump_script.sql'):
+        f = open('dump_script.sql','r',encoding='utf-8')
+        datas = f.readlines()
+        for data in datas:
+            if data.startswith('INSERT INTO'):
+                cur.execute(data)
+            # elif data.startswith('CREATE TABLE'):
+            #     cur.execute(data)
     con.commit()
     with con:
         with open("dump_script.sql", 'w',encoding='utf-8') as f:
             for line in con.iterdump():
                 f.write('%s\n' % line)
     con.close()
+
 
 
 
@@ -115,20 +117,20 @@ def insertData(groupName, groupPw):
     cur.execute("select count(*) from UserGroup")
     groupId = cur.fetchone()[0] + 1
 
-    with open("login_info.txt", "a", encoding="utf-8") as f:
-        f.write("{}\n".format(groupId))
-        f.close()
+    # with open("login_info.txt", "a", encoding="utf-8") as f:
+    #     f.write("{}\n".format(groupId))
+    #     f.close()
 
     cur.execute("insert into UserGroup VALUES(?, ?, ?)", (groupId, groupName, groupPw))
-
     con.commit()
-    insertParticipation()
+    # insertParticipation()
     with con:
         with open("dump_script.sql", 'w',encoding='utf-8') as f:
             for line in con.iterdump():
                 f.write('%s\n' % line)
 
     con.close()
+    insertParticipation(groupId)
 
 def getGroupInfo():
     con = sqlite3.connect("temp.db")
@@ -142,6 +144,7 @@ def getGroupInfo():
     cur.execute('select groupName from UserGroup G where g.groupId IN(select p.groupId from Participation p where p.userId="{}")'.format(user_id))
     gName = cur.fetchall()
     
+    con.close()
     return gName
 
 
@@ -154,6 +157,7 @@ def find_username_email(login_id):
     sen = 'Select email From UserTable WHERE id="{}"'.format(login_id)
     cur.execute(sen)
     email_for_watchmyinfo = ''.join(cur.fetchone())
+    con.close()
     return username_for_watchmyinfo,email_for_watchmyinfo
 
 def change_pw(present_pw,new_pw):
@@ -168,23 +172,98 @@ def change_pw(present_pw,new_pw):
                 f.write('%s\n' % line)
     con.close()
 
-def insertParticipation():
+def insertParticipation(groupId):
     con = sqlite3.connect("temp.db")
     cur = con.cursor()
 
     with open("login_info.txt", "r", encoding="utf-8") as f:
         lines = f.readlines()    
         user_id = lines[0][4:].rstrip(" \n") 
-        groupId = lines[-1]
-        f.close()
+        # groupId = lines[-1]
+        # f.close()
     
     cur.execute("insert into Participation VALUES(?, ?)", (groupId, user_id))
     con.commit()
+    with con:
+        with open("dump_script.sql", 'w',encoding='utf-8') as f:
+            for line in con.iterdump():
+                f.write('%s\n' % line)
     con.close()
+
+def find_user_group():  #로그인한 유저가 속해있는 그룹들을 리스트로 return해주는 함수
+    if os.path.isfile('login_info.txt'):
+        con = sqlite3.connect("temp.db")
+        cur = con.cursor()
+        with open('login_info.txt','r') as f:
+            datas= f.readlines()
+            for data in datas:
+                data.strip()
+                if data.startswith('id'):
+                    login_id = data.split()[1]
+                    break
+        sen = 'Select groupId From Participation WHERE userId="{}"'.format(login_id)
+        cur.execute(sen)
+        group_ids = cur.fetchall()
+        user_group_list= []
+        for group_id in group_ids:
+            sen = 'Select groupName From UserGroup WHERE groupId="{}"'.format(group_id[0])
+            cur.execute(sen)
+            user_group = cur.fetchone()[0]
+            user_group_list.append(user_group)
+        con.close()
+        return user_group_list
+
+def find_group_members(groupName): #그룹의 멤버들을 리스트로 반환해주는 함수
+    con = sqlite3.connect("temp.db")
+    cur = con.cursor()
+    sen = 'Select groupId From UserGroup WHERE groupName="{}"'.format(groupName)
+    cur.execute(sen)
+    group_id = cur.fetchone()[0]
+    sen = 'Select userId From Participation WHERE groupId={}'.format(group_id)
+    cur.execute(sen)
+    group_members = cur.fetchall()
+    group_member_list = []
+    for group_member in group_members:
+        gm = group_member[0]
+        group_member_list.append(gm)
+    con.close()
+    return group_member_list
+
+def get_all_groups(): #모든 그룹들을 리스트로 반환해주는 함수
+    con = sqlite3.connect("temp.db")
+    cur = con.cursor()
+    sen = 'Select groupName From UserGroup'
+    cur.execute(sen)
+    all_groups_bfedit = cur.fetchall()
+    all_group_list = []
+    for i in all_groups_bfedit:
+        all_group_list.append(i[0])
+    con.close()
+    return all_group_list
+
+def join_group(groupName):  #그룹찾기에서 그룹 가입할 때 실행되는 함수
+    con = sqlite3.connect("temp.db")
+    cur = con.cursor()
+    sen = 'Select groupId From UserGroup WHERE groupName="{}"'.format(groupName)
+    cur.execute(sen)
+    group_id = cur.fetchone()[0]
+    con.close()
+    insertParticipation(group_id)
+    print("{}에 가입되었습니다.".format(groupName))
+
+
 
 
 
 # if __name__=='__main__':
+#     con = sqlite3.connect("temp.db")
+#     cur = con.cursor()
+#     cur.execute('CREATE TABLE IF NOT EXISTS UserTable(id char(15), UserName char(5), email char(25), password char(15))')
+#     cur.execute('CREATE TABLE IF NOT EXISTS UserGroup(groupId INTEGER PRIMARY KEY, groupName VARCHAR(30) unique, groupPw VARCHAR(15));')
+#     cur.execute('CREATE TABLE IF NOT EXISTS Participation(groupId INTEGER, userId char(15), PRIMARY KEY(groupId, userId));')
+#     con.commit()
+#     con.close()
+
 #     con = sqlite3.connect("temp.db")
 #     cur = con.cursor()
 #     cur.execute("SELECT * FROM UserTable")
@@ -196,5 +275,4 @@ def insertParticipation():
 # login_check('tina_id')
 # delete('poo_id')
 
-# confirm_id_dup('jk_id')
-
+# print(find_group_members('tina_first_group'))

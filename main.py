@@ -170,7 +170,7 @@ def new_confirm_id_dup():
             
 
 window = tk.Tk()
-window.title("Nado GUI")
+window.title("계산기")
 window.geometry("640x480") # 가로 * 세로
 #root.geometry("640x480+300+100") # 가로 * 세로 + x좌표 + y좌표
 

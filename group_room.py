@@ -1,19 +1,34 @@
 #방 만들고 들어갔을 때 
+
+#무조건 class_afterlogin 타고 들어오거나 AfterLogin, main.py 건너서 와야함
+#그냥은 안 열림
 from tkinter import *
 from tkinter.font import *
 import tkinter.messagebox as msgbox
 from tkinter import ttk
+from class_afterlogin import *
+from UserInfoDB import find_group_members
 
 def openFrame(frame):
     frame.tkraise()
 
+class make_group_member_class():
+    def __init__(self,parent,group_member):
+        self.group_member = group_member
+        self.group_member_button = Button(parent.group_member_scrollable_frame, text=self.group_member,width=8,height= 3,command=lambda:[self.group_member_button_func(parent)]).pack(side='left')
+    def group_member_button_func(self,parent):
+        print(self.group_member)
+        #아래에 더 구현해보기
+
 class grouproom:
     def __init__(self,groupName):
         self.window = Tk()
-        self.groupName = groupName  #여기다가 모임 이름 넣으면 좋을 듯
+        self.groupName = groupName  
         self.window.title(self.groupName)  
         self.window.geometry("640x480")
         self.window.resizable(False,False)
+
+        self.group_member_list = find_group_members(self.groupName)
 
         self.font1=Font(family="맑은 고딕", size=30)
         self.font2=Font(family="맑은 고딕", size=15)
@@ -67,11 +82,15 @@ class grouproom:
         self.group_member_canvas.create_window((0,0),window=self.group_member_scrollable_frame,anchor='n')
         self.group_member_canvas.configure(xscrollcommand=self.group_member_scrollbar.set)
 
-        for i in range(10):
-            line = Button(self.group_member_scrollable_frame, text="이름{}".format(i),width=8,height= 3)
-            globals()['self.button{}'.format(i)] = line
-            globals()['self.button{}'.format(i)].pack(side='left')
-        
+        # for i in range(10):
+        #     line = Button(self.group_member_scrollable_frame, text="이름{}".format(i),width=8,height= 3)
+        #     globals()['self.button{}'.format(i)] = line
+        #     globals()['self.button{}'.format(i)].pack(side='left')
+
+        for group_member in self.group_member_list:
+            globals()['self.{}_member_class'.format(group_member)] = make_group_member_class(self,group_member)
+            print(group_member)
+
             #그룹 멤버 추가, 삭제 버튼
         self.group_member_delete_button = Button(self.group_member_frame,text="삭제",font=self.font2,width=4)
         self.group_member_delete_button.pack(side='right',ipadx=2,padx=2)
@@ -87,7 +106,7 @@ class grouproom:
         self.add_event_frame = Frame(self.window)
         self.add_event_frame.pack(side='top',ipadx=280,ipady=0) 
 
-        self.go_back_button = Button(self.add_event_frame, text='이전으로',font=self.font2)
+        self.go_back_button = Button(self.add_event_frame, text='이전으로',font=self.font2,command=lambda:[self.go_back_func()])
         self.go_back_button.pack(side='left',ipadx=5)
 
         self.add_event_button = Button(self.add_event_frame, text='이벤트 추가',font=self.font2)
@@ -117,7 +136,15 @@ class grouproom:
 
         for i in range(10,0,-1):
             Button(self.add_event_scrollable_frame, text="Sample scrolling button{}".format(i),width=80,height= 7).pack()
-            
+        
+        #새로 추가한 것
+    def go_back_func(self):
+        self.window.destroy()
+        self.cal = after_log()
+        self.cal.window.mainloop()
+
+
+
 if __name__=='__main__':
-    a = grouproom()
+    a = grouproom('호호그룹')
     a.window.mainloop()
