@@ -5,13 +5,27 @@ import tkinter.messagebox as msgbox
 import tkinter.ttk as ttk
 from tkinter.ttk import Labelframe
 from tkinter.font import *
-from UserInfoDB import get_all_groups,find_user_group,join_group
+from urllib import response
+from UserInfoDB import get_all_groups,find_user_group,join_group,find_groupPw
+import class_afterlogin as cal
+from class_afterlogin import *
 
 
 def join_group_button_func(search_group_class,parent):
-    join_group(search_group_class.sear_result)
-    parent.newin.destroy()
-
+    real_groupPW = find_groupPw(search_group_class.sear_result)
+    if search_group_class.pw_entry.get()==real_groupPW:
+        response = msgbox.askokcancel("그룹 가입 확인","정말 {}에 가입하시겠습니까?".format(search_group_class.sear_result))
+        if response==True:
+            join_group(search_group_class.sear_result)
+            parent.window.destroy()
+            al = cal.after_log()
+            al.window.mainloop()
+        else:
+            search_group_class.win.tkraise()
+    else:
+        msgbox.showwarning('틀린 비밀번호','비밀번호를 잘못 입력하셨습니다.')
+        search_group_class.pw_entry.delete(0,'end')
+        search_group_class.win.tkraise()
 
 
 class make_search_group_class():
@@ -25,52 +39,67 @@ class make_search_group_class():
         if self.sear_result in parent.user_group_list:
             msgbox.showinfo('이미 속한 그룹',"이미 속해있는 그룹입니다.")
             print("이미 속해있는 그룹입니다.")
-            parent.newin.tkraise()
+            parent.window.tkraise()
         else:
-            print(self.sear_result)
-            self.win = Toplevel(parent.newin)
-            self.win.title("{} 가입".format(self.sear_result))
-            self.win.geometry('400x400')
-            self.join_group_button = Button(self.win,text='가입',font=parent.font2,command=lambda:[join_group_button_func(self,parent)]).pack()
+            # print(self.sear_result)
+            # self.win = Toplevel(parent.window)
+            # self.win.title("{} 가입".format(self.sear_result))
+            # self.win.geometry('400x400')
+            # Label("{} 가입".format(self.sear_result)).pack(side='top')
+            # self.join_group_button = Button(self.win,text='가입',font=parent.font2,command=lambda:[join_group_button_func(self,parent)]).pack()
     
-    # def join_group_button_func(self,parent):
-    #     join_group(self.sear_result)
-    #     self.win.destroy()
-    #     parent.newin.tkraise()
+            self.win = Toplevel(parent.window)
+            self.win.title("{} 가입".format(self.sear_result))
+            self.win.geometry('500x300')
 
+            self.join_lab = Label(self.win,text="{} 가입".format(self.sear_result),font=parent.font3)
+            self.join_lab.pack(side='top',pady=20)
+            self.top_space_frame = Frame(self.win,height=60)
+            self.top_space_frame.pack(fill='x',side='top')
+            self.pw_frame = Frame(self.win)
+            self.pw_frame.pack(side='top')
+            self.pw_label = Label(self.pw_frame,text="비밀번호: ",font=parent.font2)
+            self.pw_label.pack(side='left',padx=10)
+            self.pw_entry = Entry(self.pw_frame,font=parent.font2)
+            self.pw_entry.pack(side='left')
+            self.join_frame= Frame(self.win)
+            self.join_frame.pack(side='top',pady=20)
+            self.join_button = Button(self.join_frame,text='가입',font=parent.font2,width=10,command=lambda:[join_group_button_func(self,parent)])
+            self.join_button.pack()
 
 
 
 class searchgroup:
-    def __init__(self,newin):
-        self.newin = newin
-        self.newin.title("그룹 찾기")
-        self.newin.geometry("640x480")
-        self.newin.resizable(False,False)
+    def __init__(self):
+        self.window = Tk()
+        self.window.title("그룹 찾기")
+        self.window.geometry("640x480")
+        self.window.resizable(False,False)
 
         self.all_group_list= get_all_groups()
         self.user_group_list = find_user_group()
         
         self.font1=Font(family="맑은 고딕", size=30)
         self.font2=Font(family="맑은 고딕", size=15)
+        self.font3=Font(family="맑은 고딕", size=25)
 
-        self.left_space_frame = Frame(self.newin,width=60)
+        self.left_space_frame = Frame(self.window,width=60)
         self.left_space_frame.pack(fill='y',side='left')
 
-        self.right_space_frame = Frame(self.newin,width=60)
+        self.right_space_frame = Frame(self.window,width=60)
         self.right_space_frame.pack(fill='y',side='right')
         
-        self.top_space_frame = Frame(self.newin,height=30)
+        self.top_space_frame = Frame(self.window,height=30)
         self.top_space_frame.pack(fill='x',side='top')
 
 
-        self.second_space_frame = Frame(self.newin,height=60)
+        self.second_space_frame = Frame(self.window,height=60)
         self.second_space_frame.pack(fill='x',side='top')        
 
         Label(self.second_space_frame,text='그룹 이름으로 검색하세요.',font=self.font2).pack()
 
 
-        self.third_space_frame = Frame(self.newin,height=60)
+        self.third_space_frame = Frame(self.window,height=60)
         self.third_space_frame.pack(fill='x',side='top') 
 
         self.search_var = StringVar()
@@ -79,14 +108,14 @@ class searchgroup:
 
         self.search_var.trace('w',self.callback)
 
-        self.fourth_space_frame = Frame(self.newin,height=60)
+        self.fourth_space_frame = Frame(self.window,height=60)
         self.fourth_space_frame.pack(fill='x',side='top')
 
         self.search_setting_button = Button(self.fourth_space_frame,text="검색 설정",font=self.font2)
         self.search_setting_button.pack(pady=5)
 
 
-        self.fifth_space_frame = Frame(self.newin)
+        self.fifth_space_frame = Frame(self.window)
         self.fifth_space_frame.pack(fill='both',side='top',expand=True,pady=5)
             # 찾은 그룹들 버튼이 나타나는 scrollable
         self.search_group_container = Frame(self.fifth_space_frame,bd=1,relief='solid')

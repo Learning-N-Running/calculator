@@ -18,10 +18,8 @@ def init_db_when_start():
     # 테이블 추가할 때마다 여기에 넣어주기
     cur.execute('CREATE TABLE IF NOT EXISTS UserTable(id VARCHAR(30), UserName char(5), email char(25), password char(15))')
     cur.execute('CREATE TABLE IF NOT EXISTS UserGroup(groupId INTEGER PRIMARY KEY, groupName VARCHAR(30) unique, groupPw VARCHAR(15), masterName VARCHAR(30));')
-    # cur.execute('CREATE TABLE IF NOT EXISTS Participation(groupId INTEGER, userId char(15), PRIMARY KEY(groupId, userId));')
-    cur.execute('CREATE TABLE IF NOT EXISTS Event(eventId INTEGER, eventName VARCHAR(30), groupId INTEGER, PRIMARY KEY(eventId));')
-    cur.execute('CREATE TABLE Participation (groupId INTEGER, userId char(15), PRIMARY KEY (groupId, userId), CONSTRAINT fk_group1 FOREIGN KEY (groupId) REFERENCES UserGroup(groupId) ON DELETE CASCADE);')
-    cur.execute('CREATE TABLE Event (eventId INTEGER, eventName VARCHAR(30), groupId INTEGER, PRIMARY KEY (eventId), CONSTRAINT fk_group2 FOREIGN KEY (groupId) REFERENCES UserGroup(groupId) ON DELETE CASCADE);')
+    cur.execute('CREATE TABLE IF NOT EXISTS Participation (groupId INTEGER, userId char(15), PRIMARY KEY (groupId, userId), CONSTRAINT fk_group1 FOREIGN KEY (groupId) REFERENCES UserGroup(groupId) ON DELETE CASCADE);')
+    cur.execute('CREATE TABLE IF NOT EXISTS Event (eventId INTEGER, eventName VARCHAR(30), groupId INTEGER, PRIMARY KEY (eventId), CONSTRAINT fk_group2 FOREIGN KEY (groupId) REFERENCES UserGroup(groupId) ON DELETE CASCADE);')
 
     if os.path.isfile('dump_script.sql'):
         f = open('dump_script.sql','r',encoding='utf-8')
@@ -280,9 +278,8 @@ def getGroupId(groupName):
     sen = 'SELECT groupId FROM UserGroup WHERE groupName="{}"'.format(groupName)
     cur.execute(sen)
     groupId = cur.fetchone()[0]
-    print(groupId)
+    con.close()
     return groupId
-    cur.close()
 
 def updateEvent(groupId, eventName):
     con = sqlite3.connect("temp.db")
@@ -297,6 +294,30 @@ def updateEvent(groupId, eventName):
     con.close()
 
 
+def find_events(groupName):  #어떤 그룹의 이벤트리스트를 반환해주는 함수
+    con = sqlite3.connect("temp.db")
+    cur = con.cursor()
+    sen = 'Select groupId From UserGroup WHERE groupName="{}"'.format(groupName)
+    cur.execute(sen)
+    group_id = cur.fetchone()[0]
+    sen = 'Select eventName From Event WHERE groupId="{}"'.format(group_id)
+    cur.execute(sen)
+    event_names_bfedit = cur.fetchall()
+    event_list = []
+    for event in event_names_bfedit:
+        event_list.append(event[0])
+    con.close()
+    return event_list
+
+def find_groupPw(groupName):
+    con = sqlite3.connect("temp.db")
+    cur = con.cursor()
+    sen = 'Select groupPw From UserGroup WHERE groupName="{}"'.format(groupName)
+    cur.execute(sen)
+    groupPw = cur.fetchone()
+    groupPw = groupPw[0]
+    con.close()
+    return groupPw
 
 # if __name__=='__main__':
 #     con = sqlite3.connect("temp.db")
@@ -319,3 +340,6 @@ def updateEvent(groupId, eventName):
 # delete('poo_id')
 
 # print(find_group_members('tina_first_group'))
+# find_events('tina_first_group')
+# find_events('bb')
+# find_groupPw('tina_first_group')
