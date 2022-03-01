@@ -24,6 +24,7 @@ def join_group_button_func(search_group_class,parent):
             search_group_class.win.tkraise()
     else:
         msgbox.showwarning('틀린 비밀번호','비밀번호를 잘못 입력하셨습니다.')
+        search_group_class.pw_entry.delete(0,'end')
         search_group_class.win.tkraise()
 
 
