@@ -272,6 +272,21 @@ def getEventInfo(groupId):
     con.close()
 
 
+def find_events(groupName):  #어떤 그룹의 이벤트리스트를 반환해주는 함수
+    con = sqlite3.connect("temp.db")
+    cur = con.cursor()
+    sen = 'Select groupId From UserGroup WHERE groupName="{}"'.format(groupName)
+    cur.execute(sen)
+    group_id = cur.fetchone()[0]
+    sen = 'Select eventName From Event WHERE groupId="{}"'.format(group_id)
+    cur.execute(sen)
+    event_names_bfedit = cur.fetchall()
+    event_list = []
+    for event in event_names_bfedit:
+        event_list.append(event[0])
+    con.close()
+    return event_list
+
 
 # if __name__=='__main__':
 #     con = sqlite3.connect("temp.db")
@@ -294,3 +309,5 @@ def getEventInfo(groupId):
 # delete('poo_id')
 
 # print(find_group_members('tina_first_group'))
+# find_events('tina_first_group')
+find_events('bb')

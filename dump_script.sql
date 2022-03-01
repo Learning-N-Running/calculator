@@ -4,6 +4,8 @@ INSERT INTO "Event" VALUES(1,'e1',1);
 INSERT INTO "Event" VALUES(2,'e2',2);
 INSERT INTO "Event" VALUES(3,'e3',2);
 INSERT INTO "Event" VALUES(4,'e4',3);
+INSERT INTO "Event" VALUES(5,'이벤트1',4);
+INSERT INTO "Event" VALUES(6,'이벤트2',4);
 CREATE TABLE Participation(groupId INTEGER, userId char(15), PRIMARY KEY(groupId, userId));
 INSERT INTO "Participation" VALUES(1,'id1');
 INSERT INTO "Participation" VALUES(2,'id2');

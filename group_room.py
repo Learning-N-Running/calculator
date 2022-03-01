@@ -7,7 +7,7 @@ from tkinter.font import *
 import tkinter.messagebox as msgbox
 from tkinter import ttk
 from class_afterlogin import *
-from UserInfoDB import find_group_members
+from UserInfoDB import find_group_members,find_events
 
 def openFrame(frame):
     frame.tkraise()
@@ -20,6 +20,14 @@ class make_group_member_class():
         print(self.group_member)
         #아래에 더 구현해보기
 
+class make_event_class:
+    def __init__(self,parent,event):
+        self.event = event
+        self.event_button = Button(parent.add_event_scrollable_frame, text=self.event,font=parent.font2,width=47,height= 2,command=lambda:[self.event_button_func(parent)]).pack()
+    
+    def event_button_func(self,parent):
+        print(self.event)
+
 class grouproom:
     def __init__(self,groupName):
         self.window = Tk()
@@ -29,6 +37,7 @@ class grouproom:
         self.window.resizable(False,False)
 
         self.group_member_list = find_group_members(self.groupName)
+        self.event_list = find_events(self.groupName)
 
         self.font1=Font(family="맑은 고딕", size=30)
         self.font2=Font(family="맑은 고딕", size=15)
@@ -114,7 +123,7 @@ class grouproom:
 
             #이벤트 버튼 scrollable frame
         self.add_event_container = Frame(self.window,bd=1,relief='solid')
-        self.add_event_container.pack(side='left',fill='both',expand=True,pady=5)
+        self.add_event_container.pack(side='left',fill='both',expand=True)
 
         self.add_event_canvas = Canvas(self.add_event_container) 
         self.add_event_canvas.pack(side='left',fill='both',expand=True)
@@ -131,12 +140,17 @@ class grouproom:
             )
         )
 
-        self.add_event_canvas.create_window((0,0),window=self.add_event_scrollable_frame,anchor='nw',width=560)
+        self.add_event_canvas.create_window((0,0),window=self.add_event_scrollable_frame,anchor='nw')
         self.add_event_canvas.configure(yscrollcommand=self.add_event_scrollbar.set)
 
-        for i in range(10,0,-1):
-            Button(self.add_event_scrollable_frame, text="Sample scrolling button{}".format(i),width=80,height= 7).pack()
+        # for i in range(10,0,-1):
+        #     Button(self.add_event_scrollable_frame, text="이벤트 {}".format(i),font=self.font2,width=47,height= 2).pack()
         
+
+        for event in self.event_list:
+            globals()['self.{}_event_class'.format(event)] = make_event_class(self,event)
+
+
         #새로 추가한 것
     def go_back_func(self):
         self.window.destroy()
