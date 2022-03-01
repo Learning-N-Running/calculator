@@ -199,8 +199,6 @@ class after_log:  #after_login.py를 클래스화 한 것
 
 
 
-
-
 if __name__=="__main__":
     k = after_log()
     k.window.mainloop()

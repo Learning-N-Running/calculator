@@ -18,9 +18,9 @@ def init_db_when_start():
     # 테이블 추가할 때마다 여기에 넣어주기
     cur.execute('CREATE TABLE IF NOT EXISTS UserTable(id VARCHAR(30), UserName char(5), email char(25), password char(15))')
     cur.execute('CREATE TABLE IF NOT EXISTS UserGroup(groupId INTEGER PRIMARY KEY, groupName VARCHAR(30) unique, groupPw VARCHAR(15), masterName VARCHAR(30));')
-    cur.execute('CREATE TABLE IF NOT EXISTS Participation(groupId INTEGER, userId char(15), PRIMARY KEY(groupId, userId));')
-    cur.execute('CREATE TABLE IF NOT EXISTS Event(eventId INTEGER, eventName VARCHAR(30), groupId INTEGER, PRIMARY KEY(eventId));')
-
+    # cur.execute('CREATE TABLE IF NOT EXISTS Participation(groupId INTEGER, userId char(15), PRIMARY KEY(groupId, userId));')
+    cur.execute('CREATE TABLE IF NOT EXISTS Participation (groupId INTEGER, userId char(15), PRIMARY KEY (groupId, userId), CONSTRAINT fk_group1 FOREIGN KEY (groupId) REFERENCES UserGroup(groupId) ON DELETE CASCADE);')
+    cur.execute('CREATE TABLE IF NOT EXISTS Event (eventId INTEGER, eventName VARCHAR(30), groupId INTEGER, PRIMARY KEY (eventId), CONSTRAINT fk_group2 FOREIGN KEY (groupId) REFERENCES UserGroup(groupId) ON DELETE CASCADE);')
 
     if os.path.isfile('dump_script.sql'):
         f = open('dump_script.sql','r',encoding='utf-8')
@@ -191,8 +191,6 @@ def insertParticipation(groupId):
         user_id = lines[0][4:].rstrip(" \n") 
         # groupId = lines[-1]
         # f.close()
-
-
     
     cur.execute("insert into Participation VALUES(?, ?)", (groupId, user_id))
     con.commit()
@@ -264,11 +262,37 @@ def join_group(groupName):  #그룹찾기에서 그룹 가입할 때 실행되�
     print("{}에 가입되었습니다.".format(groupName))
 
 
-def getEventInfo(groupId):
+# -- Event
+def getEventInfo():
     con = sqlite3.connect("temp.db")
     cur = con.cursor()
-    sen = 'select * from '
+    sen = 'select eventName from Event'
     cur.execute(sen)
+
+    event_list = cur.fetchall()
+    con.close()
+    return event_list
+
+def getGroupId(groupName):
+    con = sqlite3.connect("temp.db")
+    cur = con.cursor()
+    sen = 'SELECT groupId FROM UserGroup WHERE groupName="{}"'.format(groupName)
+    cur.execute(sen)
+    groupId = cur.fetchone()[0]
+    print(groupId)
+    return groupId
+    cur.close()
+
+def updateEvent(groupId, eventName):
+    con = sqlite3.connect("temp.db")
+    cur = con.cursor()
+
+    cur.execute("select count(*) from Event")
+    eventId = cur.fetchone()[0] + 1
+
+    cur.execute("INSERT INTO Event VALUES(?, ?, ?);",(eventId, eventName, groupId))
+    
+    con.commit()   
     con.close()
 
 

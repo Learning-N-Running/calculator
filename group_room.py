@@ -7,7 +7,8 @@ from tkinter.font import *
 import tkinter.messagebox as msgbox
 from tkinter import ttk
 from class_afterlogin import *
-from UserInfoDB import find_group_members,find_events
+from UserInfoDB import find_group_members, getEventInfo, updateEvent, getGroupId,find_events
+import detailInfoF as detailF
 
 def openFrame(frame):
     frame.tkraise()
@@ -118,7 +119,7 @@ class grouproom:
         self.go_back_button = Button(self.add_event_frame, text='이전으로',font=self.font2,command=lambda:[self.go_back_func()])
         self.go_back_button.pack(side='left',ipadx=5)
 
-        self.add_event_button = Button(self.add_event_frame, text='이벤트 추가',font=self.font2)
+        self.add_event_button = Button(self.add_event_frame, text='이벤트 추가',font=self.font2, command=self.addEvent)
         self.add_event_button.pack(side='right',ipadx=5)
 
             #이벤트 버튼 scrollable frame
@@ -143,6 +144,7 @@ class grouproom:
         self.add_event_canvas.create_window((0,0),window=self.add_event_scrollable_frame,anchor='nw')
         self.add_event_canvas.configure(yscrollcommand=self.add_event_scrollbar.set)
 
+        self.insertEventIntoList()
         # for i in range(10,0,-1):
         #     Button(self.add_event_scrollable_frame, text="이벤트 {}".format(i),font=self.font2,width=47,height= 2).pack()
         
@@ -156,6 +158,30 @@ class grouproom:
         self.window.destroy()
         self.cal = after_log()
         self.cal.window.mainloop()
+
+    def addEvent(self):
+        self.add_event = Toplevel(self.window)
+        self.add_event.geometry("400x300")
+        self.add_event.title("이벤트를 추가합니다.")
+
+        Label(self.add_event, text="name").pack()
+        eventName = Entry(self.add_event)
+        eventName.pack()
+        btn = Button(self.add_event, text="확인", command=lambda:[self.insertEvent(eventName.get())])
+        btn.pack()
+
+    def insertEvent(self, eventName):  
+        groupId = getGroupId(self.groupName)
+        updateEvent(groupId, eventName)
+        self.insertEventIntoList()
+        detailF.SampleApp()
+        self.add_event.destroy()
+
+    
+    def insertEventIntoList(self):
+        event_list = getEventInfo()
+        for i in event_list:
+            Button(self.add_event_scrollable_frame, text="{}".format(i[0]),width=80,height= 7, command=detailF.SampleApp).pack()
 
 
 
