@@ -135,8 +135,11 @@ def addGroup():
 
 def SearchGroup():
     print("그룹을 찾습니다")
-    win_sg = Toplevel(window)
-    sg = searchgroup(win_sg)
+    # win_sg = Toplevel(window)
+    # sg = searchgroup(win_sg)
+    window.destroy()
+    sg = searchgroup()
+    sg.window.mainloop()
     
 def insertGroupIntoList():
     group_name = getGroupInfo()[-1][0]
