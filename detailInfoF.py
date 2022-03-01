@@ -8,7 +8,7 @@ class SampleApp(tk.Tk):
 
         self.title_font = tkfont.Font(family='Helvetica', size=18, weight="bold", slant="italic")
         
-        self.geometry("600x400")
+        self.geometry("640x480")
         container = tk.Frame(self)
         container.pack(side="top", fill="both", expand=True)
         container.grid_rowconfigure(0, weight=1)
