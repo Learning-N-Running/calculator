@@ -69,12 +69,12 @@ def callback(*args):
     blank_list = [' '*n for n in range(1,11)]
     blank_list.append('')
     if a in blank_list or b in blank_list:
-        lb_var.set("다시 입력하세요.")
+        lb_var.set("비밀번호가 일치하지 않습니다")
     else:
         if a==b:
             lb_var.set("비밀번호가 일치합니다.")
         else:
-            lb_var.set("다시 입력하세요.")
+            lb_var.set("비밀번호가 일치하지 않습니다")
     
 def add_group_complete(): #모임 추가화면에서 확인 눌렀을 때 마지막으로 실행되는 함수
     msgbox.showinfo("그룹 추가","그룹이 정상적으로 추가되었습니다.")

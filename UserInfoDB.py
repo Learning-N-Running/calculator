@@ -262,10 +262,12 @@ def join_group(groupName):  #그룹찾기에서 그룹 가입할 때 실행되�
 
 
 # -- Event
-def getEventInfo(groupId):
+def getEventInfo(groupName):
     con = sqlite3.connect("temp.db")
     cur = con.cursor()
-    sen = 'select eventName from Event where groupId={}'.format(groupId)
+
+    groupId = getGroupId(groupName)
+    sen = 'select eventName from Event where groupName={}'.format(groupId)
     cur.execute(sen)
 
     event_list = cur.fetchall()

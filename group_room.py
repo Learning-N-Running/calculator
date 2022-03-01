@@ -29,6 +29,9 @@ class make_event_class:
     def event_button_func(self,parent):
         print(self.event)
 
+
+
+
 class grouproom:
     def __init__(self,groupName):
         self.window = Tk()
@@ -144,7 +147,7 @@ class grouproom:
         self.add_event_canvas.create_window((0,0),window=self.add_event_scrollable_frame,anchor='nw')
         self.add_event_canvas.configure(yscrollcommand=self.add_event_scrollbar.set)
 
-        self.insertEventIntoList()
+        # self.insertEventIntoList()
         # for i in range(10,0,-1):
         #     Button(self.add_event_scrollable_frame, text="이벤트 {}".format(i),font=self.font2,width=47,height= 2).pack()
         
@@ -174,19 +177,28 @@ class grouproom:
         groupId = getGroupId(self.groupName)
         updateEvent(groupId, eventName)
         self.insertEventIntoList()
-        detailF.SampleApp(1)
+        detailF.SampleApp()
         self.add_event.destroy()
 
 
     def insertEventIntoList(self, i = 0):
-        event_list = getEventInfo()
+        event_list = getEventInfo(self.groupName)
         if i == 0:
+            Button(self.add_event_scrollable_frame, text="{}".format(event_list[-1][0]),width=80,height= 7, command=detailF.SampleApp).pack()
+        else:
             for i in event_list:
                 Button(self.add_event_scrollable_frame, text="{}".format(i[0]),width=80,height= 7, command=detailF.SampleApp).pack()
-        else:
-            Button(self.add_event_scrollable_frame, text="{}".format(event_list[-1][0]),width=80,height= 7, command=detailF.SampleApp).pack()
 
 
+        self.insertEventIntoList(1)
+        detailF.SampleApp()
+        self.add_event.destroy()
+
+    
+    # def insertEventIntoList(self):
+    #     event_list = getEventInfo()
+    #     for i in event_list:
+    #         Button(self.add_event_scrollable_frame, text="{}".format(i[0]),width=80,height= 7, command=detailF.SampleApp).pack()
 
 
 
