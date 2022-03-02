@@ -293,6 +293,10 @@ def updateEvent(groupId, eventName):
     cur.execute("INSERT INTO Event VALUES(?, ?, ?);",(eventId, eventName, groupId))
     
     con.commit()   
+    with con:
+        with open("dump_script.sql", 'w',encoding='utf-8') as f:
+            for line in con.iterdump():
+                f.write('%s\n' % line)
     con.close()
 
 
