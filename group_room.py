@@ -7,6 +7,7 @@ from tkinter.font import *
 import tkinter.messagebox as msgbox
 from tkinter import ttk
 from class_afterlogin import *
+import class_afterlogin as cal
 from UserInfoDB import find_group_members, getEventInfo, updateEvent, getGroupId,find_events
 import detailInfoF as detailF
 
@@ -159,7 +160,7 @@ class grouproom:
         #새로 추가한 것
     def go_back_func(self):
         self.window.destroy()
-        self.cal = after_log()
+        self.cal = cal.after_log()
         self.cal.window.mainloop()
 
     def addEvent(self):

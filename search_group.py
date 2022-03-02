@@ -112,7 +112,10 @@ class searchgroup:
         self.fourth_space_frame.pack(fill='x',side='top')
 
         self.search_setting_button = Button(self.fourth_space_frame,text="검색 설정",font=self.font2)
-        self.search_setting_button.pack(pady=5)
+        self.search_setting_button.pack(pady=5,side='right')
+
+        self.go_back_button = Button(self.fourth_space_frame,text="이전으로",font=self.font2, command=lambda:[self.go_back_button_func()])
+        self.go_back_button.pack(pady=5,side='left')
 
 
         self.fifth_space_frame = Frame(self.window)
@@ -193,6 +196,10 @@ class searchgroup:
         for sear_result in sear_result_list:
             globals()['self.{}_search_group_class'.format(sear_result)] = make_search_group_class(self,sear_result)
 
+    def go_back_button_func(self):
+        self.window.destroy()
+        al = cal.after_log()
+        al.window.mainloop()
 
         
 
