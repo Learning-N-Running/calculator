@@ -1,10 +1,15 @@
 BEGIN TRANSACTION;
 CREATE TABLE Event (eventId INTEGER, eventName VARCHAR(30), groupId INTEGER, PRIMARY KEY (eventId), CONSTRAINT fk_group2 FOREIGN KEY (groupId) REFERENCES UserGroup(groupId) ON DELETE CASCADE);
 INSERT INTO "Event" VALUES(1,'tina_first_event',1);
+INSERT INTO "Event" VALUES(2,'jh_first_event',2);
 CREATE TABLE Participation (groupId INTEGER, userId char(15), PRIMARY KEY (groupId, userId), CONSTRAINT fk_group1 FOREIGN KEY (groupId) REFERENCES UserGroup(groupId) ON DELETE CASCADE);
 INSERT INTO "Participation" VALUES(1,'tina_id');
+INSERT INTO "Participation" VALUES(2,'jh_id');
+INSERT INTO "Participation" VALUES(1,'jh_id');
 CREATE TABLE UserGroup(groupId INTEGER PRIMARY KEY, groupName VARCHAR(30) unique, groupPw VARCHAR(15), masterName VARCHAR(30));
 INSERT INTO "UserGroup" VALUES(1,'tina_first_group','1234','tina_id');
+INSERT INTO "UserGroup" VALUES(2,'jh_first_group','1234','jh_id');
 CREATE TABLE UserTable(id VARCHAR(30), UserName char(5), email char(25), password char(15));
 INSERT INTO "UserTable" VALUES('tina_id','tina_name','seungeun020309@gmail.com','tina_pw');
+INSERT INTO "UserTable" VALUES('jh_id','jh_name','seungeun020309@gmail.com','jh_pw');
 COMMIT;
