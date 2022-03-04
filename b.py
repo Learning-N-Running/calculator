@@ -1,8 +1,13 @@
-k = ["가",'나','다','라']
-k_stng = ""
-for i in k:
-    if i==k[-1]:
-        k_stng+=i
-    else:
-        k_stng+=i+"\n"
+import random
+import string
+
+leng = 5
+string_pool = string.ascii_uppercase
+string_int_pool = string.digits
+result = ''
+for i in range(leng):
+    result+=random.choice(string_pool)
+for i in range(leng):
+    result+=random.choice(string_int_pool)
+print(result)
 

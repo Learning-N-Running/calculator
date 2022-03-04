@@ -62,7 +62,8 @@ import tkinter.messagebox as msgbox
 import email_test as et
 
 #여기서부터 다른 점
-from UserInfoDB import find_id
+from UserInfoDB import find_email,Create_temp_pw
+
 
 window.title("비밀번호 찾기")
 window.geometry("310x300")
@@ -81,23 +82,40 @@ Label(find_pw_inputid_frame,text="ID:",font=font2).pack(pady=10,side='left')
 find_pw_inputid_entry = Entry(find_pw_inputid_frame,font=font2,width=20)
 find_pw_inputid_entry.pack(padx=5,side='left')
 
-find_pw_find_button = Button(find_pw_frame,text="찾기",font=font2,command=lambda:[find_id_find_button_func()],width=10)
+find_pw_find_button = Button(find_pw_frame,text="찾기",font=font2,command=lambda:[find_pw_find_button_func()],width=10)
 find_pw_find_button.pack(pady=10)
 
-go_back_button = Button(find_pw_frame,text="이전으로",font=font2)
-go_back_button.pack(pady=10, side="left",fill='x',expand=True)
+find_pw_go_back_button = Button(find_pw_frame,text="이전으로",font=font2)
+find_pw_go_back_button.pack(pady=10, side="left",fill='x',expand=True)
 
-def find_id_find_button_func():
-    id_list = find_id(find_pw_inputid_entry.get())
-    blank_list = [' '*n for n in range(1,11)]
-    blank_list.append('')
-    if find_pw_inputid_entry.get() in blank_list:
-        msgbox.showwarning("빈칸 입력","등록하신 이메일을 입력하세요.")
+def find_pw_find_button_func():
+    email_finded = find_email(find_pw_inputid_entry.get())
+    if email_finded==None:
+        msgbox.showerror("존재하지 않는 ID",'존재하지 않는 ID입니다.')
+        find_pw_inputid_entry.delete(0,'end')
     else:
-        if id_list==[]:
-            msgbox.showwarning("등록되지 않은 이메일","등록되지 않은 이메일입니다.")
-            print("등록되지 않은 이메일입니다.")
-        else:
-            msgbox.showinfo("ID 전송","{}로 ID를 보냈습니다.\n확인해주세요.".format(find_pw_inputid_entry.get()))
-            et.sendEmail_find_id(find_pw_inputid_entry.get(),id_list)
+        print("임시 비밀번호를 보내드립니다.")
+        result = et.sendEmail_find_pw(find_pw_inputid_entry.get(),email_finded)
+        msgbox.showinfo("임시 비밀번호 전송"," {}로\n임시 비밀번호를 보내드렸습니다.\n로그인 후 비밀번호를 변경해주세요.".format(email_finded))
+        Create_temp_pw(find_pw_inputid_entry.get(),result)
+        find_pw_inputid_entry.delete(0,'end')
+        
+        
+
+
+# def find_id_find_button_func():
+#     id_list = find_id(find_pw_inputid_entry.get())
+#     blank_list = [' '*n for n in range(1,11)]
+#     blank_list.append('')
+#     if find_pw_inputid_entry.get() in blank_list:
+#         msgbox.showwarning("빈칸 입력","등록하신 이메일을 입력하세요.")
+#     else:
+#         if id_list==[]:
+#             msgbox.showwarning("등록되지 않은 이메일","등록되지 않은 이메일입니다.")
+#             print("등록되지 않은 이메일입니다.")
+#         else:
+#             msgbox.showinfo("ID 전송","{}로 ID를 보냈습니다.\n확인해주세요.".format(find_pw_inputid_entry.get()))
+#             et.sendEmail_find_id(find_pw_inputid_entry.get(),id_list)
+
+
 window.mainloop()

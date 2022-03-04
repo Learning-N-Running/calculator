@@ -1,8 +1,9 @@
 from ast import expr_context
-import encodings
+import email
 from tkinter import messagebox
 import sqlite3
 import os
+
 
 
 
@@ -338,6 +339,32 @@ def find_id(email): #이메일로 찾은 id리스트를 반환하는 것.
     con.close()
     return id_list
 
+def find_email(login_id): #비밀번호 찾을 때 임시 비밀번호를 보내기 위한 이메일 찾기
+    con = sqlite3.connect("temp.db")
+    cur = con.cursor()
+    sen = 'Select email From UserTable WHERE id="{}"'.format(login_id)
+    cur.execute(sen)
+    email_finded = cur.fetchone()
+    if email_finded!=None:
+        email_finded = email_finded[0]
+    else:
+        pass
+    con.close()
+    return email_finded
+
+def Create_temp_pw(id,new_pw): #비밀번호 변경할 때
+    con = sqlite3.connect("temp.db")
+    cur = con.cursor()
+    sen = 'Update UserTable SET password="{}" WHERE id="{}"'.format(new_pw,id)
+    cur.execute(sen)
+    con.commit()
+    with con:
+        with open("dump_script.sql", 'w',encoding='utf-8') as f:
+            for line in con.iterdump():
+                f.write('%s\n' % line)
+    con.close()
+
+
 # if __name__=='__main__':
 #     con = sqlite3.connect("temp.db")
 #     cur = con.cursor()
@@ -363,3 +390,6 @@ def find_id(email): #이메일로 찾은 id리스트를 반환하는 것.
 # find_events('bb')
 # find_groupPw('tina_first_group')
 # print(find_id('seungeun020309'))
+# print(find_email('tina_id'))
+
+Create_temp_pw('tina_id','tina_pw')
