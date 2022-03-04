@@ -268,7 +268,7 @@ def getEventInfo(groupName):
     cur = con.cursor()
 
     groupId = getGroupId(groupName)
-    sen = 'select eventName from Event where groupName={}'.format(groupId)
+    sen = 'select eventName from Event where groupId={}'.format(groupId)
     cur.execute(sen)
 
     event_list = cur.fetchall()
