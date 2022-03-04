@@ -2,9 +2,10 @@ import tkinter as tk
 from tkinter import *
 from account import *
 import tkinter.messagebox as msgbox
+from tkinter.font import *
 
 import email_test as et
-from UserInfoDB import confirm_id_dup, userUpdate,login_check,init_db_when_start
+from UserInfoDB import confirm_id_dup, userUpdate,login_check,init_db_when_start,find_id
 
 def openFrame(frame):
     frame.tkraise()
@@ -38,9 +39,19 @@ def btnLogin():
 
 
 def btnJoin():
+    window.title("계산기")
+    window.geometry("640x480")
     login_userId_entry.delete(0,'end')
     login_password_entry.delete(0,'end')
     openFrame(join_frame)
+
+def btnFindID():
+    login_userId_entry.delete(0,'end')
+    login_password_entry.delete(0,'end')
+    window.title("ID 찾기")
+    window.geometry("700x300")
+
+    openFrame(find_id_frame)
 
 #join frame 함수
 def get_uups():
@@ -167,7 +178,33 @@ def new_confirm_id_dup():
     elif response==userId:
         msgbox.showinfo("아이디 사용 가능","사용 가능한 ID입니다.")
         id_dup_switch = 'usable'
-            
+
+#find_id_frame 함수
+def find_id_goback_func():
+    find_id_email_entry.delete(0,'end')
+    window.title("계산기")
+    window.geometry("640x480")
+    openFrame(login_frame)
+
+def find_id_find_button_func():
+    id_list = find_id(find_id_email_entry.get())
+    blank_list = [' '*n for n in range(1,11)]
+    blank_list.append('')
+    if find_id_email_entry.get() in blank_list:
+        msgbox.showwarning("빈칸 입력","등록하신 이메일을 입력하세요.")
+        find_id_email_entry.delete(0,'end')
+    else:
+        if id_list==[]:
+            msgbox.showwarning("등록되지 않은 이메일","등록되지 않은 이메일입니다.")
+            find_id_email_entry.delete(0,'end')
+        else:
+            et.sendEmail_find_id(find_id_email_entry.get(),id_list)
+            msgbox.showinfo("ID 전송","{}로 ID를 보냈습니다.\n확인해주세요.".format(find_id_email_entry.get()))
+            find_id_email_entry.delete(0,'end')
+            window.title("계산기")
+            window.geometry("640x480")
+            openFrame(login_frame)
+
 
 window = tk.Tk()
 window.title("계산기")
@@ -180,9 +217,11 @@ init_db_when_start()
 
 login_frame = Frame(window)
 join_frame = Frame(window)
+find_id_frame = Frame(window)
 
 login_frame.grid(row=0, column=0, sticky="nsew")
 join_frame.grid(row=0, column=0, sticky="nsew")
+find_id_frame.grid(row=0, column=0, sticky="nsew",padx=10,pady=10)
 
 #login frame
 Label(login_frame, text = "User ID : ").grid(row = 0, column = 0, padx = 10, pady = 10)
@@ -196,6 +235,7 @@ login_password_entry.grid(row = 1, column = 1, padx = 10, pady = 10)
 
 Button(login_frame, text = "Login", command = btnLogin).grid(row = 2, column = 0, padx = 10, pady = 10)
 Button(login_frame, text = "join", command = btnJoin).grid(row = 2, column = 1, padx = 10, pady = 10)
+Button(login_frame, text = "ID 찾기",command=btnFindID).grid(row = 3, column = 0, padx = 10, pady = 10)
 
 #join frame
 Label(join_frame, text="이름").grid(row=0, column=0, padx=10, pady=10)
@@ -219,6 +259,28 @@ Button(join_frame, text="ID 중복 확인", command=new_confirm_id_dup).grid(row
 Button(join_frame, text="인증번호 받기", command=lambda:[new_sendEmail()]).grid(row=3, column=2, padx=10, pady=10)
 
 Button(join_frame, text="이전으로", command=go_back).grid(row=7, column=0, padx=10, pady=10)
+
+
+#find id frame
+font1=Font(family="맑은 고딕", size=30)
+font2=Font(family="맑은 고딕", size=15)
+Label(find_id_frame,text="ID 찾기",font=font1).pack(pady=10)
+
+find_id_email_frame = Frame(find_id_frame)
+find_id_email_frame.pack(padx=10)
+
+Label(find_id_email_frame,text="가입시 사용한 이메일:",font=font2).pack(pady=10,side='left')
+
+find_id_email_entry = Entry(find_id_email_frame,font=font2,width=40)
+find_id_email_entry.pack(padx=5,side='left')
+
+find_id_find_button = Button(find_id_frame,text="찾기",font=font2,command=lambda:[find_id_find_button_func()],width=10)
+find_id_find_button.pack(pady=10)
+
+find_id_go_back_button = Button(find_id_frame,text="이전으로",font=font2,command=lambda:[find_id_goback_func()])
+find_id_go_back_button.pack(pady=10, side="left",fill='x',expand=True)
+
+
 
 
 openFrame(login_frame)

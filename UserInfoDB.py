@@ -325,6 +325,19 @@ def find_groupPw(groupName):
     con.close()
     return groupPw
 
+def find_id(email): #이메일로 찾은 id리스트를 반환하는 것.
+    con = sqlite3.connect("temp.db")
+    cur = con.cursor()
+    sen = 'Select id From UserTable WHERE email="{}"'.format(email)
+    cur.execute(sen)
+    ids_bfedit = cur.fetchall()
+    id_list = []
+    for ids in ids_bfedit:
+        id = ids[0]
+        id_list.append(id)
+    con.close()
+    return id_list
+
 # if __name__=='__main__':
 #     con = sqlite3.connect("temp.db")
 #     cur = con.cursor()
@@ -349,3 +362,4 @@ def find_groupPw(groupName):
 # find_events('tina_first_group')
 # find_events('bb')
 # find_groupPw('tina_first_group')
+# print(find_id('seungeun020309'))

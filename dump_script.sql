@@ -2,6 +2,7 @@ BEGIN TRANSACTION;
 CREATE TABLE Event (eventId INTEGER, eventName VARCHAR(30), groupId INTEGER, PRIMARY KEY (eventId), CONSTRAINT fk_group2 FOREIGN KEY (groupId) REFERENCES UserGroup(groupId) ON DELETE CASCADE);
 INSERT INTO "Event" VALUES(1,'tina_first_event',1);
 INSERT INTO "Event" VALUES(2,'jh_first_event',2);
+INSERT INTO "Event" VALUES(3,'tina_second_event',1);
 CREATE TABLE Participation (groupId INTEGER, userId char(15), PRIMARY KEY (groupId, userId), CONSTRAINT fk_group1 FOREIGN KEY (groupId) REFERENCES UserGroup(groupId) ON DELETE CASCADE);
 INSERT INTO "Participation" VALUES(1,'tina_id');
 INSERT INTO "Participation" VALUES(2,'jh_id');

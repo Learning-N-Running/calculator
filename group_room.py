@@ -106,7 +106,7 @@ class grouproom:
             print(group_member)
 
             #그룹 멤버 추가, 삭제 버튼
-        self.group_member_delete_button = Button(self.group_member_frame,text="삭제",font=self.font2,width=4)
+        self.group_member_delete_button = Button(self.group_member_frame,text="퇴장",font=self.font2,width=4)
         self.group_member_delete_button.pack(side='right',ipadx=2,padx=2)
         self.group_member_delete_button.configure(fg='red')
 
