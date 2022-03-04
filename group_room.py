@@ -177,8 +177,19 @@ class grouproom:
     def insertEvent(self, eventName):  
         groupId = getGroupId(self.groupName)
         updateEvent(groupId, eventName)
-        # self.insertEventIntoList()
-        detailF.SampleApp(eventName,self.groupName)
+        self.insertEventIntoList(0)
+        # detailF.SampleApp()
+        # self.add_event.destroy()
+
+
+    def insertEventIntoList(self, i = 0):
+        event_list = getEventInfo(self.groupName)
+        if i == 0:
+            globals()['self.{}_event_class'.format(event_list[-1][0])] = make_event_class(self,event_list[-1][0])
+            # Button(self.add_event_scrollable_frame, text="{}".format(event_list[-1][0]),width=80,height= 7, command=detailF.SampleApp).pack()
+        else:
+            for i in event_list:
+                Button(self.add_event_scrollable_frame, text="{}".format(i[0]),width=80,height= 7, command=detailF.SampleApp).pack()
         self.add_event.destroy()
 
     
