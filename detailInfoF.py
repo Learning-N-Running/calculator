@@ -1,14 +1,24 @@
+from cgitb import text
 import tkinter as tk
-from tkinter import Toplevel, font as tkfont
+from tkinter import StringVar, Toplevel, font as tkfont
+from tkcalendar import DateEntry 
+
+from UserInfoDB import insertEventInfo
 
 class SampleApp(tk.Tk):
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self,event,groupName, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
 
         self.title_font = tkfont.Font(family='Helvetica', size=18, weight="bold", slant="italic")
         
         self.geometry("640x480")
+
+        self.event = event
+        self.groupName = groupName
+
+        self.title('[{}] - [{}]'.format(self.groupName,self.event))
+
         container = tk.Frame(self)
         container.pack(side="top", fill="both", expand=True)
         container.grid_rowconfigure(0, weight=1)
@@ -42,39 +52,67 @@ class SampleApp(tk.Tk):
         tk.Button(add_member, text="찾기").pack()
 
 
+
 class Home(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
 
-        tk.Label(self, text="날짜").place(x=40, y=40)
-        tk.Label(self, text="장소").place(x=40, y=90)
+        self.event_site = StringVar()
+        self.event_date = StringVar()
+        self.event_memo = StringVar()
 
-        tk.Entry(self).place(x=80, y=40)
-        tk.Entry(self).place(x=80, y=90)
+        tk.Label(self, text="날짜").place(x=50, y=50)
+        tk.Label(self, text="장소").place(x=50, y=100)
+
+        self.eventSite = tk.Entry(self, textvariable=self.event_site)
+        self.eventSite.place(x=90, y=50)
+
+        self.eventMemo = tk.Text(self, height=10, width=30)
+        self.eventMemo.place(x=50, y=170)
+
+        eventDate=DateEntry(self,selectmode='day', textvariable=self.event_date)
+        eventDate.place(x=90, y=100)
+
+        self.dateBtn = tk.Button(self, text="확인", command=self.date_upd)
+        self.dateBtn.place(x=220, y=100)
+
+        self.dateLb = tk.Label(self, text="")
+        self.dateLb.place(x=200, y=135)
         
-        text = tk.Text(self, height=15, width=30)
-        text.place(x=40, y=130)
-
         button1 = tk.Button(self, text="모임원 추가", width=25,
                             command=lambda: controller.add_member())
         button2 = tk.Button(self, text="일정관리", width=25,
                             command=lambda: controller.show_frame("Schedule"))
         button3 = tk.Button(self, text="소비내역", width=25,
                             command=lambda: controller.show_frame("Amount"))
+        button4 = tk.Button(self, text="저장", width=25, command=self.insert_eventInfo)
 
-        button1.place(x=40, y=350)
-        button2.place(x=200, y=350)
-        button3.place(x=360, y=350)
+
+        button1.place(x=50, y=360)
+        button2.place(x=210, y=360)
+        button3.place(x=370, y=360)
+        button4.place(x=370, y = 400)
 
         listbox = tk.Listbox(self, selectmode="extended", width=30, height=18)
         listbox.insert(0, "1")
         listbox.insert(1, "2")
         listbox.insert(2, "3")
         listbox.insert(3, "4")
-        listbox.place(x=330, y=40)
+        listbox.place(x=340, y=50)
+    
+    def date_upd(self):
+        self.dateLb.config(text=self.event_date.get())
 
+    def callback(*args, sv):
+        pass
+    
+    def insert_eventInfo(self):
+        self.event_site.trace('w', self.callback(sv = self.eventSite))
+        self.event_memo.trace('w', self.callback(sv = self.eventMemo))
+
+        insertEventInfo(self.event_site.get(), self.event_date.get(), self.eventMemo.get("1.0", "end-1c"))
 
 class Schedule(tk.Frame):
 
@@ -116,5 +154,5 @@ class Amount(tk.Frame):
 
 
 if __name__ == "__main__":
-    app = SampleApp()
+    app = SampleApp('event','groupname')
     app.mainloop()

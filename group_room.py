@@ -7,6 +7,7 @@ from tkinter.font import *
 import tkinter.messagebox as msgbox
 from tkinter import ttk
 from class_afterlogin import *
+import class_afterlogin as cal
 from UserInfoDB import find_group_members, getEventInfo, updateEvent, getGroupId,find_events
 import detailInfoF as detailF
 
@@ -27,7 +28,7 @@ class make_event_class:
         self.event_button = Button(parent.add_event_scrollable_frame, text=self.event,font=parent.font2,width=47,height= 3,command=lambda:[self.event_button_func(parent)]).pack()
     
     def event_button_func(self,parent):
-        print(self.event)
+        df = detailF.SampleApp(self.event,parent.groupName)
 
 
 
@@ -159,7 +160,7 @@ class grouproom:
         #새로 추가한 것
     def go_back_func(self):
         self.window.destroy()
-        self.cal = after_log()
+        self.cal = cal.after_log()
         self.cal.window.mainloop()
 
     def addEvent(self):
@@ -192,6 +193,8 @@ class grouproom:
 
         self.insertEventIntoList(1)
         detailF.SampleApp()
+        # self.insertEventIntoList()
+        detailF.SampleApp(eventName,self.groupName)
         self.add_event.destroy()
 
     

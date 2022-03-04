@@ -20,6 +20,7 @@ def init_db_when_start():
     cur.execute('CREATE TABLE IF NOT EXISTS UserGroup(groupId INTEGER PRIMARY KEY, groupName VARCHAR(30) unique, groupPw VARCHAR(15), masterName VARCHAR(30));')
     cur.execute('CREATE TABLE IF NOT EXISTS Participation (groupId INTEGER, userId char(15), PRIMARY KEY (groupId, userId), CONSTRAINT fk_group1 FOREIGN KEY (groupId) REFERENCES UserGroup(groupId) ON DELETE CASCADE);')
     cur.execute('CREATE TABLE IF NOT EXISTS Event (eventId INTEGER, eventName VARCHAR(30), groupId INTEGER, PRIMARY KEY (eventId), CONSTRAINT fk_group2 FOREIGN KEY (groupId) REFERENCES UserGroup(groupId) ON DELETE CASCADE);')
+    cur.execute('CREATE TABLE IF NOT EXISTS EventInfo (eventId INTEGER PRIMARY KEY, eventSite VARCHAR(30), eventDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL, CONSTRAINT fk_event FOREIGN KEY (eventId) REFERENCES Event(eventId) ON DELETE CASCADE);')
 
     if os.path.isfile('dump_script.sql'):
         f = open('dump_script.sql','r',encoding='utf-8')
@@ -293,6 +294,10 @@ def updateEvent(groupId, eventName):
     cur.execute("INSERT INTO Event VALUES(?, ?, ?);",(eventId, eventName, groupId))
     
     con.commit()   
+    with con:
+        with open("dump_script.sql", 'w',encoding='utf-8') as f:
+            for line in con.iterdump():
+                f.write('%s\n' % line)
     con.close()
 
 
@@ -320,6 +325,23 @@ def find_groupPw(groupName):
     groupPw = groupPw[0]
     con.close()
     return groupPw
+
+
+#--eventInfo
+
+def insertEventInfo(eventSite, eventDate, eventMemo):
+    con = sqlite3.connect("temp.db")
+    cur = con.cursor()
+
+    with open("login_info.txt", "r", encoding="utf-8") as f:
+        lines = f.readlines()    
+        eventId = lines[2].rstrip(' \n')
+        print(eventId)
+        f.close()
+
+    cur.execute("INSERT OR REPLACE INTO EventInfo VALUES(?, ?, ?, ?);",(eventId, eventSite, eventMemo, eventDate))
+    con.commit()
+    con.close()
 
 # if __name__=='__main__':
 #     con = sqlite3.connect("temp.db")
