@@ -19,9 +19,9 @@ def init_db_when_start():
     # 테이블 추가할 때마다 여기에 넣어주기
     cur.execute('CREATE TABLE IF NOT EXISTS UserTable(id VARCHAR(30), UserName char(5), email char(25), password char(15))')
     cur.execute('CREATE TABLE IF NOT EXISTS UserGroup(groupId INTEGER PRIMARY KEY, groupName VARCHAR(30) unique, groupPw VARCHAR(15), masterName VARCHAR(30));')
-    # cur.execute('CREATE TABLE IF NOT EXISTS Participation(groupId INTEGER, userId char(15), PRIMARY KEY(groupId, userId));')
     cur.execute('CREATE TABLE IF NOT EXISTS Participation (groupId INTEGER, userId char(15), PRIMARY KEY (groupId, userId), CONSTRAINT fk_group1 FOREIGN KEY (groupId) REFERENCES UserGroup(groupId) ON DELETE CASCADE);')
     cur.execute('CREATE TABLE IF NOT EXISTS Event (eventId INTEGER, eventName VARCHAR(30), groupId INTEGER, PRIMARY KEY (eventId), CONSTRAINT fk_group2 FOREIGN KEY (groupId) REFERENCES UserGroup(groupId) ON DELETE CASCADE);')
+    cur.execute('CREATE TABLE IF NOT EXISTS EventInfo (eventId INTEGER PRIMARY KEY, eventSite VARCHAR(30), eventDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL, CONSTRAINT fk_event FOREIGN KEY (eventId) REFERENCES Event(eventId) ON DELETE CASCADE);')
 
     if os.path.isfile('dump_script.sql'):
         f = open('dump_script.sql','r',encoding='utf-8')
@@ -264,10 +264,12 @@ def join_group(groupName):  #그룹찾기에서 그룹 가입할 때 실행되�
 
 
 # -- Event
-def getEventInfo():
+def getEventInfo(groupName):
     con = sqlite3.connect("temp.db")
     cur = con.cursor()
-    sen = 'select eventName from Event'
+
+    groupId = getGroupId(groupName)
+    sen = 'select eventName from Event where groupId={}'.format(groupId)
     cur.execute(sen)
 
     event_list = cur.fetchall()
@@ -280,9 +282,8 @@ def getGroupId(groupName):
     sen = 'SELECT groupId FROM UserGroup WHERE groupName="{}"'.format(groupName)
     cur.execute(sen)
     groupId = cur.fetchone()[0]
-    print(groupId)
+    con.close()
     return groupId
-    cur.close()
 
 def updateEvent(groupId, eventName):
     con = sqlite3.connect("temp.db")
@@ -364,6 +365,23 @@ def Create_temp_pw(id,new_pw): #비밀번호 변경할 때
                 f.write('%s\n' % line)
     con.close()
 
+
+
+#--eventInfo
+
+def insertEventInfo(eventSite, eventDate, eventMemo):
+    con = sqlite3.connect("temp.db")
+    cur = con.cursor()
+
+    with open("login_info.txt", "r", encoding="utf-8") as f:
+        lines = f.readlines()    
+        eventId = lines[2].rstrip(' \n')
+        print(eventId)
+        f.close()
+
+    cur.execute("INSERT OR REPLACE INTO EventInfo VALUES(?, ?, ?, ?);",(eventId, eventSite, eventMemo, eventDate))
+    con.commit()
+    con.close()
 
 # if __name__=='__main__':
 #     con = sqlite3.connect("temp.db")
