@@ -178,8 +178,8 @@ class grouproom:
         groupId = getGroupId(self.groupName)
         updateEvent(groupId, eventName)
         self.insertEventIntoList(0)
-        # detailF.SampleApp()
-        # self.add_event.destroy()
+        detailF.SampleApp()
+        self.add_event.destroy()
 
 
     def insertEventIntoList(self, i = 0):

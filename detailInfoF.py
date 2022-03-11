@@ -63,8 +63,8 @@ class Home(tk.Frame):
         self.event_date = StringVar()
         self.event_memo = StringVar()
 
-        tk.Label(self, text="날짜").place(x=50, y=50)
-        tk.Label(self, text="장소").place(x=50, y=100)
+        tk.Label(self, text="장소").place(x=50, y=50)
+        tk.Label(self, text="날짜").place(x=50, y=100)
 
         self.eventSite = tk.Entry(self, textvariable=self.event_site)
         self.eventSite.place(x=90, y=50)
@@ -72,8 +72,8 @@ class Home(tk.Frame):
         self.eventMemo = tk.Text(self, height=10, width=30)
         self.eventMemo.place(x=50, y=170)
 
-        eventDate=DateEntry(self,selectmode='day', textvariable=self.event_date)
-        eventDate.place(x=90, y=100)
+        self.eventDate=DateEntry(self,selectmode='day', textvariable=self.event_date)
+        self.eventDate.place(x=90, y=100)
 
         self.dateBtn = tk.Button(self, text="확인", command=self.date_upd)
         self.dateBtn.place(x=220, y=100)
@@ -103,6 +103,7 @@ class Home(tk.Frame):
         listbox.place(x=340, y=50)
     
     def date_upd(self):
+        print(self.event_date.get());
         self.dateLb.config(text=self.event_date.get())
 
     def callback(*args, sv):
@@ -112,7 +113,8 @@ class Home(tk.Frame):
         self.event_site.trace('w', self.callback(sv = self.eventSite))
         self.event_memo.trace('w', self.callback(sv = self.eventMemo))
 
-        insertEventInfo(self.event_site.get(), self.event_date.get(), self.eventMemo.get("1.0", "end-1c"))
+        insertEventInfo(self.eventSite.get(), self.eventDate.get(), self.eventMemo.get("1.0", "end-1c"))
+
 
 class Schedule(tk.Frame):
 
