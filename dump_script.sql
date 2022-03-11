@@ -14,7 +14,6 @@ INSERT INTO "Participation" VALUES(3,'id1');
 CREATE TABLE UserGroup(groupId INTEGER PRIMARY KEY, groupName VARCHAR(30) unique, groupPw VARCHAR(15), masterName VARCHAR(30));
 INSERT INTO "UserGroup" VALUES(1,'tina_first_group','1234','tina_id');
 INSERT INTO "UserGroup" VALUES(2,'jh_first_group','1234','jh_id');
-INSERT INTO "UserGroup" VALUES(3,'123','123','id1');
 CREATE TABLE UserTable(id VARCHAR(30), UserName char(5), email char(25), password char(15));
 INSERT INTO "UserTable" VALUES('tina_id','tina_name','seungeun020309@gmail.com','tina_pw');
 INSERT INTO "UserTable" VALUES('jh_id','jh_name','seungeun020309@gmail.com','jh_pw');
