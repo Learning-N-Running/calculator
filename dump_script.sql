@@ -3,11 +3,13 @@ CREATE TABLE Event (eventId INTEGER, eventName VARCHAR(30), groupId INTEGER, PRI
 INSERT INTO "Event" VALUES(1,'tina_first_event',1);
 INSERT INTO "Event" VALUES(2,'jh_first_event',2);
 INSERT INTO "Event" VALUES(3,'tina_second_event',1);
-CREATE TABLE EventInfo (eventId INTEGER PRIMARY KEY, eventSite VARCHAR(30), eventDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL, CONSTRAINT fk_event FOREIGN KEY (eventId) REFERENCES Event(eventId) ON DELETE CASCADE);
+INSERT INTO "Event" VALUES(4,'ee',3);
+CREATE TABLE EventInfo (eventId INTEGER PRIMARY KEY, eventSite VARCHAR(30), eventDate TEXT, eventMemo TEXT, CONSTRAINT fk_event FOREIGN KEY (eventId) REFERENCES Event(eventId) ON DELETE CASCADE);
 CREATE TABLE Participation (groupId INTEGER, userId char(15), PRIMARY KEY (groupId, userId), CONSTRAINT fk_group1 FOREIGN KEY (groupId) REFERENCES UserGroup(groupId) ON DELETE CASCADE);
 INSERT INTO "Participation" VALUES(1,'tina_id');
 INSERT INTO "Participation" VALUES(2,'jh_id');
 INSERT INTO "Participation" VALUES(1,'jh_id');
+INSERT INTO "Participation" VALUES(3,'id1');
 CREATE TABLE UserGroup(groupId INTEGER PRIMARY KEY, groupName VARCHAR(30) unique, groupPw VARCHAR(15), masterName VARCHAR(30));
 INSERT INTO "UserGroup" VALUES(1,'tina_first_group','1234','tina_id');
 INSERT INTO "UserGroup" VALUES(2,'jh_first_group','1234','jh_id');

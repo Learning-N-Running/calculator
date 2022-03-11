@@ -21,7 +21,7 @@ def init_db_when_start():
     cur.execute('CREATE TABLE IF NOT EXISTS UserGroup(groupId INTEGER PRIMARY KEY, groupName VARCHAR(30) unique, groupPw VARCHAR(15), masterName VARCHAR(30));')
     cur.execute('CREATE TABLE IF NOT EXISTS Participation (groupId INTEGER, userId char(15), PRIMARY KEY (groupId, userId), CONSTRAINT fk_group1 FOREIGN KEY (groupId) REFERENCES UserGroup(groupId) ON DELETE CASCADE);')
     cur.execute('CREATE TABLE IF NOT EXISTS Event (eventId INTEGER, eventName VARCHAR(30), groupId INTEGER, PRIMARY KEY (eventId), CONSTRAINT fk_group2 FOREIGN KEY (groupId) REFERENCES UserGroup(groupId) ON DELETE CASCADE);')
-    cur.execute('CREATE TABLE IF NOT EXISTS EventInfo (eventId INTEGER PRIMARY KEY, eventSite VARCHAR(30), eventDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL, CONSTRAINT fk_event FOREIGN KEY (eventId) REFERENCES Event(eventId) ON DELETE CASCADE);')
+    cur.execute('CREATE TABLE IF NOT EXISTS EventInfo (eventId INTEGER PRIMARY KEY, eventSite VARCHAR(30), eventDate TEXT, eventMemo TEXT, CONSTRAINT fk_event FOREIGN KEY (eventId) REFERENCES Event(eventId) ON DELETE CASCADE);')
 
     if os.path.isfile('dump_script.sql'):
         f = open('dump_script.sql','r',encoding='utf-8')
